@@ -7,6 +7,18 @@ Future<void> addpoint({point, doc}) async {
       FirebaseFirestore.instance.collection('users').doc(doc).collection(doc);
   return users.doc(doc).update({
     'point': c + point,
+  }).then((value) async {
+    await addpointAll(doc: doc, point: c + point);
+    c = 0;
+    print("add data ");
+  }).catchError((error) => print("Failed to add user: $error"));
+}
+
+Future<void> addpointAll({point, doc}) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('Allusers');
+
+  return users.doc(doc).update({
+    'point': point,
   }).then((value) {
     c = 0;
     print("add data ");
@@ -16,11 +28,12 @@ Future<void> addpoint({point, doc}) async {
 Future<void> adduser({name, image, doc, point}) {
   CollectionReference users =
       FirebaseFirestore.instance.collection('users').doc(doc).collection(doc);
+
   return users
       .doc(doc)
       .set({
         'name': name,
-        'image': "images/imageava.png",
+        'image': "images/avt$image.png",
         'id': doc,
         'point': point,
       })
@@ -34,19 +47,8 @@ Future<void> adduserall({name, image, doc, point}) {
       .doc(doc)
       .set({
         'name': name,
-        'image': "images/imageava.png",
+        'image': "images/avt$image.png",
         'id': doc,
-        'point': point,
-      })
-      .then((value) => print("add data "))
-      .catchError((error) => print("Failed to add user: $error"));
-}
-
-Future<void> addpointAll({docd, point}) {
-  CollectionReference users = FirebaseFirestore.instance.collection('Allusers');
-  return users
-      .doc(docd)
-      .update({
         'point': point,
       })
       .then((value) => print("add data "))

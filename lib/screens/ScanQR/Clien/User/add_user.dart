@@ -10,6 +10,8 @@ import 'package:qrscanar/screens/ScanQR/Clien/profile.dart';
 import 'package:qrscanar/screens/ScanQR/admin/admin.dart';
 import 'package:qrscanar/screens/ScanQR/scan_qr.dart';
 
+import '../../../home/Home.dart';
+
 var id;
 
 class AddUser extends StatefulWidget {
@@ -23,30 +25,47 @@ class _AddUserState extends State<AddUser> {
     super.initState();
   }
 
+  var islod = false;
+
   var reslt = "";
   var name = "";
+  var indextimage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,
           onPressed: () async {
-            if (reslt == "" && id == "") {
+            setState(() {
+              islod = true;
+            });
+            if (name == "" && id == "") {
             } else {
               var h = await iduraccont(doc: id);
               if (h == null) {
-                await adduser(doc: id, point: 0, name: name);
-                await adduserall(doc: id, point: 0, name: name);
+                await adduser(
+                    doc: id, point: 0, name: name, image: indextimage);
+                await adduserall(
+                    doc: id, point: 0, name: name, image: indextimage);
+                storg.write("id", id);
 
-                Get.to(Profile(
+                Get.to(Home(
                   id: id,
                 ));
               } else {
                 Get.snackbar("Exapsion", "this is an existing accont");
               }
             }
+            setState(() {
+              islod = false;
+            });
           },
-          child: const Icon(Icons.arrow_forward_ios),
+          child: islod == true
+              ? CircularProgressIndicator(
+                  color: Colors.white,
+                )
+              : Icon(Icons.arrow_forward_ios),
         ),
         appBar: AppBar(
           centerTitle: true,
@@ -69,12 +88,61 @@ class _AddUserState extends State<AddUser> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.47,
                     width: MediaQuery.of(context).size.width,
                     child: Image.asset("images/img2.png"),
                   ),
+                  InkWell(
+                      onTap: () {
+                        Get.defaultDialog(
+                          title: "Avatar",
+                          content: Container(
+                            height: 200,
+                            child: NotificationListener<
+                                OverscrollIndicatorNotification>(
+                              onNotification: (overscroll) {
+                                overscroll.disallowIndicator();
+                                return true;
+                              },
+                              child: GridView.count(
+                                // Create a grid with 2 columns. If you change the scrollDirection to
+                                // horizontal, this produces 2 rows.
+                                crossAxisCount: 3,
+                                // Generate 100 widgets that display their index in the List.
+                                children: List.generate(9, (index) {
+                                  return Center(
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          Get.back();
+                                          indextimage = index;
+
+                                          print(indextimage);
+                                        });
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage:
+                                            AssetImage("images/avt$index.png"),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 30,
+                        backgroundImage:
+                            AssetImage("images/avt$indextimage.png"),
+                      )),
                   Padding(
                     padding: const EdgeInsets.only(
+                      top: 10,
                       left: 40,
                       right: 40,
                     ),

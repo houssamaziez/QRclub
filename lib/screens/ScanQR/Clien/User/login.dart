@@ -9,6 +9,8 @@ import 'package:qrscanar/screens/ScanQR/Clien/User/add_user.dart';
 import 'package:qrscanar/screens/ScanQR/Clien/profile.dart';
 import 'package:qrscanar/screens/ScanQR/scan_qr.dart';
 
+import '../../../home/Home.dart';
+
 class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
@@ -32,7 +34,7 @@ class _LoginState extends State<Login> {
           onPressed: () {
             if (reslt == "" && name == "") {
             } else {
-              Get.to(Profile(
+              Get.offAll(Home(
                 id: reslt,
               ));
             }

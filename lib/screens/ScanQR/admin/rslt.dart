@@ -9,27 +9,51 @@ import 'package:qrscanar/main.dart';
 import 'admin.dart';
 
 //  profile user
-class Rslt extends StatelessWidget {
+class Rslt extends StatefulWidget {
   final id;
 
-  const Rslt({Key? key, this.id}) : super(key: key);
+  Rslt({Key? key, this.id}) : super(key: key);
+
+  @override
+  State<Rslt> createState() => _RsltState();
+}
+
+class _RsltState extends State<Rslt> {
+  var islod = false;
+
   @override
   Widget build(BuildContext context) {
-    CollectionReference users =
-        FirebaseFirestore.instance.collection('users').doc(id).collection(id);
+    CollectionReference users = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.id)
+        .collection(widget.id);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red,
-        child: Text(
-          "+" + point.toString(),
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
+        child: islod == true
+            ? CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : Text(
+                "+" + point.toString(),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
         onPressed: () async {
-          await getDocs(doc: id);
-          await addpoint(doc: id, point: point);
-          addpointAll(docd: id, point: point);
-          Get.offAll(Admin());
+          if (islod == false) {
+            setState(() {
+              islod = true;
+            });
+
+            await getDocs(doc: widget.id);
+            await addpoint(doc: widget.id, point: point);
+            setState(() {
+              islod = false;
+            });
+            Get.offAll(Admin());
+          } else {
+            print('waiting');
+          }
         },
       ),
       backgroundColor: Colors.red.shade50,
@@ -86,9 +110,9 @@ class Rslt extends StatelessWidget {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                   ),
-                                  qr(context: context, code: id),
+                                  qr(context: context, code: widget.id),
                                   SelectableText(
-                                    "id : " + id,
+                                    "id : " + widget.id,
                                     style: TextStyle(
                                         color: Color(0xFFFD5D5D),
                                         fontSize:
@@ -103,8 +127,8 @@ class Rslt extends StatelessWidget {
                                   StreamBuilder<QuerySnapshot>(
                                     stream: FirebaseFirestore.instance
                                         .collection('users')
-                                        .doc(id)
-                                        .collection(id)
+                                        .doc(widget.id)
+                                        .collection(widget.id)
                                         .snapshots(),
                                     builder: (context,
                                         AsyncSnapshot<QuerySnapshot> snapshot) {

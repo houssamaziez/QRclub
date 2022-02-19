@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qrscanar/Controller/var.dart';
+import 'package:qrscanar/screens/ScanQR/Clien/profile.dart';
 import 'package:qrscanar/screens/ScanQR/screen_qr.dart';
 
 import '../../main.dart';
+import '../home/Home.dart';
 import 'Clien/User/add_user.dart';
 
 class ScreenStart extends StatefulWidget {
@@ -18,7 +21,11 @@ class _ScreenStartState extends State<ScreenStart> {
   @override
   void initState() {
     Timer(Duration(seconds: 6), () {
-      Get.off(() => AddUser());
+      storg.read("id") == null
+          ? Get.off(() => AddUser())
+          : Get.off(() => Home(
+                id: storg.read("id"),
+              ));
     });
     super.initState();
   }
@@ -45,7 +52,7 @@ class _ScreenStartState extends State<ScreenStart> {
               left: 0,
               right: 0,
               child: const Text(
-                'QR Scane',
+                'SMC Coins',
                 style: TextStyle(
                     color: Color(0xFFF54343),
                     fontSize: 40,

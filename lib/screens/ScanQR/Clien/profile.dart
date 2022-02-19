@@ -2,22 +2,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:qrscanar/Controller/function.dart';
 import 'package:qrscanar/Controller/var.dart';
-import 'package:qrscanar/main.dart';
 import 'package:qrscanar/screens/ScanQR/Clien/User/add_user.dart';
 import 'package:qrscanar/screens/ScanQR/admin/admin.dart';
 import 'package:qrscanar/screens/ScanQR/allmanmber/screenall.dart';
+import 'package:qrscanar/screens/home/Home.dart';
 
 //  profile user
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   final id;
 
   const Profile({Key? key, this.id}) : super(key: key);
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    CollectionReference users =
-        FirebaseFirestore.instance.collection('users').doc(id).collection(id);
+    CollectionReference users = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.id)
+        .collection(widget.id);
     final GlobalKey<ScaffoldState> _key = GlobalKey();
     return Scaffold(
       key: _key,
@@ -28,12 +35,12 @@ class Profile extends StatelessWidget {
             onPressed: () {
               _key.currentState?.openDrawer();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
               color: Colors.red,
             )),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       body: Center(
         child: Stack(
           children: [
@@ -59,6 +66,7 @@ class Profile extends StatelessWidget {
                                     height: MediaQuery.of(context).size.height *
                                         0.07,
                                   ),
+                                  //  NAME
                                   StreamBuilder<QuerySnapshot>(
                                     stream: users.snapshots(),
                                     builder: (context,
@@ -78,7 +86,7 @@ class Profile extends StatelessWidget {
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.034,
+                                                  0.038,
                                               fontWeight: FontWeight.bold),
                                         );
                                       }
@@ -89,61 +97,85 @@ class Profile extends StatelessWidget {
                                   ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.1,
+                                        0.03,
                                   ),
-                                  qr(context: context, code: id),
+                                  // QR
+                                  qr(context: context, code: widget.id),
+                                  // ID
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.06,
                                   ),
-                                  SelectableText(
-                                    "id : " + id,
-                                    style: TextStyle(
-                                        color: const Color(0xFFFD5D5D),
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                0.03,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(id)
-                                        .collection(id)
-                                        .snapshots(),
-                                    builder: (context,
-                                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                                      final posts = snapshot.data?.docs;
-                                      if (!snapshot.hasData) {
-                                        return const Text(
-                                          'No Data...',
-                                        );
-                                      } else {
-                                        var s = posts![0]["point"];
+                                  //  PONT
+                                  Center(
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(widget.id)
+                                          .collection(widget.id)
+                                          .snapshots(),
+                                      builder: (context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return const Text(
+                                            'No Data...',
+                                          );
+                                        } else {
+                                          final posts = snapshot.data?.docs;
 
-                                        return Text(
-                                          "point : " + s.toString(),
-                                          style: TextStyle(
-                                              color: const Color(0xFFFD5D5D),
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.03,
-                                              fontWeight: FontWeight.bold),
-                                        );
-                                      }
-                                    },
+                                          var s = posts![0]["point"];
+                                          // IMAGE POINT LVL
+
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image:
+                                                        newMethod(point: s))),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.15,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4,
+                                            child: Center(
+                                              child: Text(
+                                                s.toString(),
+                                                style: TextStyle(
+                                                    color:
+                                                        const Color(0xFFFD5D5D),
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.04,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
                                   ),
+                                  const Text(
+                                    "Coins",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
                                 ],
                               ),
                             ),
                           )),
                     ),
-                    const Spacer(),
                   ],
                 ),
               ),
             ),
+            // imag
+
             Positioned(
               top: MediaQuery.of(context).size.height * 0.02,
               left: 0,
@@ -164,6 +196,7 @@ class Profile extends StatelessWidget {
                       backgroundColor: Colors.white,
                       radius: 60,
                       child: CircleAvatar(
+                        backgroundColor: Colors.white,
                         radius: 50,
                         child: Image.asset(resultt),
                       ),
@@ -176,51 +209,100 @@ class Profile extends StatelessWidget {
         ),
       ),
       drawer: Drawer(
+        backgroundColor: Colors.grey.shade100,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: Colors.red.shade300,
               ),
-              child: Text('Name Club'),
+              child: const Text('Name Club'),
             ),
-            ListTile(
-              title: const Text('All members'),
-              onTap: () {
-                Get.to(() => AllMbr());
-              },
+            Card(
+              child: ListTile(
+                leading: Icon(
+                  Icons.home,
+                  color: Colors.red,
+                ),
+                title: const Text('Home'),
+                onTap: () {
+                  Get.off(Home(
+                    id: storg.read("id"),
+                  ));
+                },
+              ),
             ),
-            ListTile(
-              title: const Text('Admine'),
-              onTap: () {
-                Get.to(Admin());
-              },
+            Card(
+              child: ListTile(
+                leading: Icon(
+                  Icons.group_outlined,
+                  color: Colors.red,
+                ),
+                title: const Text('All members'),
+                onTap: () {
+                  Get.to(() => AllMbr());
+                },
+              ),
             ),
-            ListTile(
-              title: const Text('Item 3'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
+            Card(
+              child: ListTile(
+                leading: Icon(
+                  Icons.admin_panel_settings,
+                  color: Colors.red,
+                ),
+                title: const Text('Admine'),
+                onTap: () {
+                  Get.defaultDialog(
+                      title: "Password",
+                      content: TextField(
+                        onChanged: (val) {
+                          if (val == "houssam") {
+                            Get.to(Admin());
+                          }
+                        },
+                      ));
+                },
+              ),
             ),
-            ListTile(
-              title: const Text('Item 3'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.38,
             ),
-            ListTile(
-              title: const Text('Log out'),
-              onTap: () {
-                Get.offAll(AddUser());
-              },
+            Card(
+              child: ListTile(
+                title: const Text('Log out'),
+                onTap: () async {
+                  Get.offAll(AddUser());
+                  storg.remove("id");
+                },
+                leading: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.red,
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  newMethod({point}) {
+    if (point <= 10) {
+      return AssetImage("images/lvl1.gif");
+    }
+    if (point > 10 && point <= 20) {
+      return AssetImage("images/lvl2.gif");
+    }
+    if (point > 20 && point <= 40) {
+      return AssetImage("images/lvl3.gif");
+    }
+    if (point > 40 && point <= 60) {
+      return AssetImage("images/lvl4.gif");
+    }
+    if (point > 60) {
+      return AssetImage("images/lvl5.gif");
+    }
   }
 }
 
