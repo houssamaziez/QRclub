@@ -22,7 +22,7 @@ class _ScanQRAdminState extends State<ScanQRAdmin> {
 
         if (result != null) {
           Get.off(Rslt(
-            id: result?.code,
+            id: result?.code.toString(),
           ));
         }
       });

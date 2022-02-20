@@ -8,6 +8,17 @@ import 'package:qrscanar/screens/ScanQR/Clien/User/add_user.dart';
 import 'package:qrscanar/screens/ScanQR/admin/admin.dart';
 import 'package:qrscanar/screens/ScanQR/allmanmber/screenall.dart';
 import 'package:qrscanar/screens/home/notefication.dart';
+import 'dart:async';
+
+import 'package:url_launcher/url_launcher.dart';
+
+goUrl({@required url}) async {
+  if (await canLaunch(url)) {
+    await launch(url, forceSafariVC: false);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
 //  profile user
 class Home extends StatefulWidget {
@@ -54,7 +65,7 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: Colors.deepOrange,
+        selectedItemColor: colors,
         unselectedItemColor: Colors.black,
         showSelectedLabels: false,
         onTap: (z) {
@@ -76,9 +87,9 @@ class _HomeState extends State<Home> {
             onPressed: () {
               _key.currentState?.openDrawer();
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.menu,
-              color: Colors.red,
+              color: colors,
             )),
       ),
       backgroundColor: Colors.grey.shade100,
@@ -90,15 +101,16 @@ class _HomeState extends State<Home> {
           children: [
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.red.shade300,
+                image: DecorationImage(
+                    image: AssetImage("images/cov.png"), fit: BoxFit.contain),
               ),
-              child: const Text('Name Club'),
+              child: const Text(''),
             ),
             Card(
               child: ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.home,
-                  color: Colors.red,
+                  color: colors,
                 ),
                 title: const Text('Home'),
                 onTap: () {
@@ -112,7 +124,7 @@ class _HomeState extends State<Home> {
               child: ListTile(
                 leading: Icon(
                   Icons.group_outlined,
-                  color: Colors.red,
+                  color: colors,
                 ),
                 title: const Text('All members'),
                 onTap: () {
@@ -124,24 +136,43 @@ class _HomeState extends State<Home> {
               child: ListTile(
                 leading: Icon(
                   Icons.admin_panel_settings,
-                  color: Colors.red,
+                  color: colors,
                 ),
                 title: const Text('Admine'),
                 onTap: () {
                   Get.defaultDialog(
                       title: "Password",
                       content: TextField(
-                        onChanged: (val) {
-                          if (val == "houssam") {
-                            Get.to(Admin());
-                          }
-                        },
-                      ));
+                          onChanged: (val) {
+                            if (val == "080808") {
+                              Get.to(Admin());
+                            }
+                          },
+                          obscureText: true));
                 },
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.38,
+              height: MediaQuery.of(context).size.height * 0.30,
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Text(
+                    'Developed by Aziez Houssam Eddine',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        launchURL();
+                      },
+                      child: const Text(
+                        "contact",
+                        style: TextStyle(fontSize: 10),
+                      ))
+                ],
+              ),
             ),
             Card(
               child: ListTile(
@@ -152,7 +183,7 @@ class _HomeState extends State<Home> {
                 },
                 leading: Icon(
                   Icons.exit_to_app,
-                  color: Colors.red,
+                  color: colors,
                 ),
               ),
             ),
@@ -354,4 +385,9 @@ qr({context, code}) {
     backgroundColor: Colors.white,
     foregroundColor: Color(0xFF000000),
   );
+}
+
+void launchURL() async {
+  if (!await launch("https://linktr.ee/houssamaziez"))
+    throw 'Could not launch https://linktr.ee/houssamaziez';
 }

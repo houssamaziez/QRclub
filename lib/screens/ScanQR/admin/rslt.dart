@@ -31,7 +31,7 @@ class _RsltState extends State<Rslt> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.red,
+        backgroundColor: colors,
         child: islod == true
             ? CircularProgressIndicator(
                 color: Colors.white,
@@ -63,7 +63,7 @@ class _RsltState extends State<Rslt> {
           children: [
             SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height * 0.8,
                 child: Column(
                   children: [
                     const Spacer(),
@@ -83,6 +83,7 @@ class _RsltState extends State<Rslt> {
                                     height: MediaQuery.of(context).size.height *
                                         0.07,
                                   ),
+                                  //  NAME
                                   StreamBuilder<QuerySnapshot>(
                                     stream: users.snapshots(),
                                     builder: (context,
@@ -102,7 +103,7 @@ class _RsltState extends State<Rslt> {
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.03,
+                                                  0.038,
                                               fontWeight: FontWeight.bold),
                                         );
                                       }
@@ -111,57 +112,88 @@ class _RsltState extends State<Rslt> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                   ),
-                                  qr(context: context, code: widget.id),
-                                  SelectableText(
-                                    "id : " + widget.id,
-                                    style: TextStyle(
-                                        color: Color(0xFFFD5D5D),
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                0.03,
-                                        fontWeight: FontWeight.bold),
-                                  ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.1,
+                                        0.03,
                                   ),
-                                  StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(widget.id)
-                                        .collection(widget.id)
-                                        .snapshots(),
-                                    builder: (context,
-                                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                                      final posts = snapshot.data?.docs;
-                                      ponitdebut = posts![0]["point"];
-                                      if (!snapshot.hasData) {
-                                        return const Text(
-                                          'No Data...',
-                                        );
-                                      } else {
-                                        return Text(
-                                          "point : " + ponitdebut.toString(),
-                                          style: const TextStyle(
-                                              color: Color(0xFFFD5D5D),
-                                              fontSize: 40,
-                                              fontWeight: FontWeight.bold),
-                                        );
-                                      }
-                                    },
+                                  // QR
+                                  qr(context: context, code: widget.id),
+                                  // ID
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.06,
                                   ),
+                                  //  PONT
+                                  Center(
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(widget.id)
+                                          .collection(widget.id)
+                                          .snapshots(),
+                                      builder: (context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return const Text(
+                                            'No Data...',
+                                          );
+                                        } else {
+                                          final posts = snapshot.data?.docs;
+
+                                          var s = posts![0]["point"];
+                                          // IMAGE POINT LVL
+
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image:
+                                                        newMethod(point: s))),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.15,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4,
+                                            child: Center(
+                                              child: Text(
+                                                s.toString(),
+                                                style: TextStyle(
+                                                    color: colors,
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.04,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Coins",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
                                 ],
                               ),
                             ),
                           )),
                     ),
-                    const Spacer(),
                   ],
                 ),
               ),
             ),
+            // imag
+
             Positioned(
-              top: MediaQuery.of(context).size.height * 0.11,
+              top: MediaQuery.of(context).size.height * 0.02,
               left: 0,
               right: 0,
               child: StreamBuilder<QuerySnapshot>(
@@ -180,6 +212,7 @@ class _RsltState extends State<Rslt> {
                       backgroundColor: Colors.white,
                       radius: 60,
                       child: CircleAvatar(
+                        backgroundColor: Colors.white,
                         radius: 50,
                         child: Image.asset(resultt),
                       ),
@@ -192,6 +225,24 @@ class _RsltState extends State<Rslt> {
         ),
       ),
     );
+  }
+
+  newMethod({point}) {
+    if (point <= 10) {
+      return AssetImage("images/lvl1.gif");
+    }
+    if (point > 10 && point <= 20) {
+      return AssetImage("images/lvl2.gif");
+    }
+    if (point > 20 && point <= 40) {
+      return AssetImage("images/lvl3.gif");
+    }
+    if (point > 40 && point <= 60) {
+      return AssetImage("images/lvl4.gif");
+    }
+    if (point > 60) {
+      return AssetImage("images/lvl5.gif");
+    }
   }
 }
 

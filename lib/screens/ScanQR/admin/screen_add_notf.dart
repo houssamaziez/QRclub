@@ -87,13 +87,6 @@ class _AddNotfState extends State<AddNotf> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "Add notification",
-            style: TextStyle(
-                color: Color(0xFFFD5D5D),
-                fontSize: 40,
-                fontWeight: FontWeight.bold),
-          ),
           // TITLE OF NOTIFICATION
           Padding(
             padding: const EdgeInsets.only(right: 40, left: 40, top: 20),

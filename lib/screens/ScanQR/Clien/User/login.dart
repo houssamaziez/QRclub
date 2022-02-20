@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
+          backgroundColor: colors,
           onPressed: () {
             if (reslt == "" && name == "") {
             } else {
@@ -43,9 +43,9 @@ class _LoginState extends State<Login> {
         ),
         appBar: AppBar(
           centerTitle: true,
-          title: const Text(
+          title: Text(
             "Log in",
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            style: TextStyle(color: colors, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -75,9 +75,9 @@ class _LoginState extends State<Login> {
                       },
                       child: Card(
                         child: ListTile(
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.qr_code_scanner_outlined,
-                              color: Colors.red,
+                              color: colors,
                             ),
                             title: id == null
                                 ? const Text("Add Your Code QR ")
@@ -89,9 +89,9 @@ class _LoginState extends State<Login> {
                       onPressed: () {
                         Get.offAll(AddUser());
                       },
-                      child: const Text(
+                      child: Text(
                         "Create an account",
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: colors),
                       )),
                   const Spacer(),
                 ],
@@ -109,13 +109,13 @@ class _LoginState extends State<Login> {
       padding: const EdgeInsets.only(right: 40, left: 40, top: 20),
       child: TextField(
         decoration: InputDecoration(
-          focusedBorder: const OutlineInputBorder(
+          focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
-            borderSide: BorderSide(width: 1, color: Colors.red),
+            borderSide: BorderSide(width: 1, color: colors),
           ),
-          border: const OutlineInputBorder(
+          border: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.red,
+            color: colors,
             width: 5,
           )),
           hintText: title,

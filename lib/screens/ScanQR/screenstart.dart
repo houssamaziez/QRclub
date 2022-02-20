@@ -43,22 +43,10 @@ class _ScreenStartState extends State<ScreenStart> {
                   image: DecorationImage(
                 filterQuality: FilterQuality.high,
                 fit: BoxFit.contain,
-                image: AssetImage("images/img1.gif"),
+                image: AssetImage("images/img1.png"),
               )),
             ),
           ),
-          Positioned(
-              bottom: MediaQuery.of(context).size.height * .17,
-              left: 0,
-              right: 0,
-              child: const Text(
-                'SMC Coins',
-                style: TextStyle(
-                    color: Color(0xFFF54343),
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ))
         ],
       ),
     );

@@ -1,13 +1,8 @@
-import 'dart:ui';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qrscanar/Controller/function.dart';
 import 'package:qrscanar/Controller/var.dart';
 import 'package:qrscanar/screens/ScanQR/Clien/User/login.dart';
-import 'package:qrscanar/screens/ScanQR/Clien/profile.dart';
-import 'package:qrscanar/screens/ScanQR/admin/admin.dart';
 import 'package:qrscanar/screens/ScanQR/scan_qr.dart';
 
 import '../../../home/Home.dart';
@@ -41,7 +36,7 @@ class _AddUserState extends State<AddUser> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
+          backgroundColor: Color(0xFF33665D),
           onPressed: () async {
             if (name == "" && id == "") {
             } else {
@@ -75,9 +70,9 @@ class _AddUserState extends State<AddUser> {
         ),
         appBar: AppBar(
           centerTitle: true,
-          title: const Text(
+          title: Text(
             "Crearte Compte",
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            style: TextStyle(color: colors, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -98,6 +93,8 @@ class _AddUserState extends State<AddUser> {
                     width: MediaQuery.of(context).size.width,
                     child: Image.asset("images/img2.png"),
                   ),
+
+                  // add QR
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 10,
@@ -111,9 +108,9 @@ class _AddUserState extends State<AddUser> {
                       child: Card(
                         elevation: 7,
                         child: ListTile(
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.qr_code_scanner_outlined,
-                              color: Colors.red,
+                              color: colors,
                             ),
                             title: id == null
                                 ? const Text("Add Your Code QR ")
@@ -125,67 +122,68 @@ class _AddUserState extends State<AddUser> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Stack(
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            Get.defaultDialog(
-                              title: "Avatar",
-                              content: Container(
-                                height: 200,
-                                child: NotificationListener<
-                                    OverscrollIndicatorNotification>(
-                                  onNotification: (overscroll) {
-                                    overscroll.disallowIndicator();
-                                    return true;
-                                  },
-                                  child: GridView.count(
-                                    // Create a grid with 2 columns. If you change the scrollDirection to
-                                    // horizontal, this produces 2 rows.
-                                    crossAxisCount: 3,
-                                    // Generate 100 widgets that display their index in the List.
-                                    children: List.generate(9, (index) {
-                                      return Center(
-                                        child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              Get.back();
-                                              indextimage = index;
 
-                                              print(indextimage);
-                                            });
-                                          },
-                                          child: CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor: Colors.transparent,
-                                            backgroundImage: AssetImage(
-                                                "images/avt$index.png"),
-                                          ),
-                                        ),
-                                      );
-                                    }),
+                  //  add avatar
+
+                  InkWell(
+                    onTap: () {
+                      Get.defaultDialog(
+                        title: "Avatar",
+                        content: Container(
+                          height: 200,
+                          child: NotificationListener<
+                              OverscrollIndicatorNotification>(
+                            onNotification: (overscroll) {
+                              overscroll.disallowIndicator();
+                              return true;
+                            },
+                            child: GridView.count(
+                              crossAxisCount: 3,
+                              children: List.generate(9, (index) {
+                                return Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        Get.back();
+                                        indextimage = index;
+
+                                        print(indextimage);
+                                      });
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: Colors.transparent,
+                                      backgroundImage:
+                                          AssetImage("images/avt$index.png"),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            radius: 30,
-                            backgroundImage:
-                                AssetImage("images/avt$indextimage.png"),
-                          )),
-                      Icon(Icons.add_a_photo),
-                    ],
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          radius: 30,
+                          backgroundImage:
+                              AssetImage("images/avt$indextimage.png"),
+                        ),
+                        const Icon(Icons.add_a_photo),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   TextButton(
                       onPressed: () {
                         Get.to(Login());
                       },
-                      child: const Text(
+                      child: Text(
                         "i have an account",
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: colors),
                       )),
                   const Spacer(),
                 ],
@@ -203,13 +201,13 @@ class _AddUserState extends State<AddUser> {
       padding: const EdgeInsets.only(right: 40, left: 40, top: 20),
       child: TextField(
         decoration: InputDecoration(
-          focusedBorder: const OutlineInputBorder(
+          focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
-            borderSide: BorderSide(width: 1, color: Colors.red),
+            borderSide: BorderSide(width: 1, color: colors),
           ),
-          border: const OutlineInputBorder(
+          border: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.red,
+            color: colors,
             width: 5,
           )),
           hintText: title,
