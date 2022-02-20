@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrscanar/Controller/function.dart';
 import 'package:qrscanar/Controller/var.dart';
 import 'package:qrscanar/main.dart';
+import 'package:qrscanar/screens/ScanQR/admin/screen_add_points.dart';
 
 import 'admin.dart';
 

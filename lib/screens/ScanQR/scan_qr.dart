@@ -96,7 +96,7 @@ class _ScanScanQRState extends State<ScanQR> {
         result = event;
         if (result != null) {
           id = result?.code;
-          Get.off(() => AddUser());
+          Get.to(() => AddUser());
         }
       });
     });

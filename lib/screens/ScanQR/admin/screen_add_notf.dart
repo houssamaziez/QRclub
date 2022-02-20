@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qrscanar/Controller/function.dart';
-import 'package:qrscanar/Controller/var.dart';
-import 'package:qrscanar/screens/ScanQR/admin/scan_qr.dart';
-import 'package:qrscanar/screens/home/Home.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class AddNotf extends StatefulWidget {
@@ -65,7 +62,9 @@ class _AddNotfState extends State<AddNotf> {
               });
               users.add({
                 'title': titlenot,
-                'date': DateTime.now(),
+                'date': DateFormat('kk:mm:ss \n EEE d MMM')
+                    .format(DateTime.now())
+                    .toString(),
                 'text': notification,
               }).then((value) {
                 msgController.clear();
@@ -100,8 +99,9 @@ class _AddNotfState extends State<AddNotf> {
             padding: const EdgeInsets.only(right: 40, left: 40, top: 20),
             child: TextField(
               controller: msgController2,
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.text,
               decoration: const InputDecoration(
+                filled: true,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   borderSide: BorderSide(width: 1, color: Colors.red),
@@ -125,9 +125,12 @@ class _AddNotfState extends State<AddNotf> {
           Padding(
             padding: const EdgeInsets.only(right: 40, left: 40, top: 20),
             child: TextField(
+              maxLines: 5,
               controller: msgController,
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.text,
               decoration: const InputDecoration(
+                filled: true,
+                isDense: true,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   borderSide: BorderSide(width: 1, color: Colors.red),
@@ -147,11 +150,6 @@ class _AddNotfState extends State<AddNotf> {
             ),
           ),
           // BUTTON ADD NOTIFICATION
-          MaterialButton(
-            color: Colors.red,
-            onPressed: () {},
-            child: islod == true ? Text("waiting") : Text("Add notification"),
-          ),
         ],
       ),
     );

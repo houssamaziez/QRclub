@@ -15,7 +15,6 @@ class Admin extends StatefulWidget {
 }
 
 var ponitdebut;
-var point = 0;
 var notification = "";
 var titlenot = "";
 
@@ -47,16 +46,20 @@ class _AdminState extends State<Admin> {
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.qr_code_scanner_rounded),
-        backgroundColor: Colors.red,
-        onPressed: () async {
-          Get.to(ScanQRAdmin());
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.qr_code_scanner_rounded),
+      //   backgroundColor: Colors.red,
+      //   onPressed: () async {
+      //     Get.to(ScanQRAdmin());
+      //   },
+      // ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+          ),
           // BUTTON ADD NOTIFICATION
           MaterialButton(
             color: Colors.red,

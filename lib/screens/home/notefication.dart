@@ -30,17 +30,30 @@ class _NetificationState extends State<Netification> {
             itemCount: posts?.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                   child: InkWell(
                     onTap: () {},
                     child: Card(
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.notifications,
-                          color: Colors.red,
+                      child: SizedBox(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.notifications,
+                            color: Colors.red,
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                            ),
+                            child: Text(posts![index]["title"]),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 30, bottom: 30),
+                            child: Text(posts[index]["text"]),
+                          ),
+                          trailing: Text(posts[index]["date"].toString(),
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.grey)),
                         ),
-                        title: Text(posts![index]["title"]),
-                        subtitle: Text(posts[index]["text"]),
                       ),
                     ),
                   ));

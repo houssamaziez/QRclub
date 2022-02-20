@@ -7,3 +7,4 @@ var resultt;
 var doc;
 
 var storg = GetStorage();
+var storgavatar = GetStorage();

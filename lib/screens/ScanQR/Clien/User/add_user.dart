@@ -21,6 +21,12 @@ class AddUser extends StatefulWidget {
 
 class _AddUserState extends State<AddUser> {
   @override
+  void dispose() {
+    storgavatar.write("avtr", indextimage);
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
   }
@@ -37,11 +43,11 @@ class _AddUserState extends State<AddUser> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,
           onPressed: () async {
-            setState(() {
-              islod = true;
-            });
             if (name == "" && id == "") {
             } else {
+              setState(() {
+                islod = true;
+              });
               var h = await iduraccont(doc: id);
               if (h == null) {
                 await adduser(
@@ -62,10 +68,10 @@ class _AddUserState extends State<AddUser> {
             });
           },
           child: islod == true
-              ? CircularProgressIndicator(
+              ? const CircularProgressIndicator(
                   color: Colors.white,
                 )
-              : Icon(Icons.arrow_forward_ios),
+              : const Icon(Icons.arrow_forward_ios),
         ),
         appBar: AppBar(
           centerTitle: true,
@@ -88,58 +94,10 @@ class _AddUserState extends State<AddUser> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.47,
+                    height: MediaQuery.of(context).size.height * 0.42,
                     width: MediaQuery.of(context).size.width,
                     child: Image.asset("images/img2.png"),
                   ),
-                  InkWell(
-                      onTap: () {
-                        Get.defaultDialog(
-                          title: "Avatar",
-                          content: Container(
-                            height: 200,
-                            child: NotificationListener<
-                                OverscrollIndicatorNotification>(
-                              onNotification: (overscroll) {
-                                overscroll.disallowIndicator();
-                                return true;
-                              },
-                              child: GridView.count(
-                                // Create a grid with 2 columns. If you change the scrollDirection to
-                                // horizontal, this produces 2 rows.
-                                crossAxisCount: 3,
-                                // Generate 100 widgets that display their index in the List.
-                                children: List.generate(9, (index) {
-                                  return Center(
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          Get.back();
-                                          indextimage = index;
-
-                                          print(indextimage);
-                                        });
-                                      },
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage:
-                                            AssetImage("images/avt$index.png"),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 30,
-                        backgroundImage:
-                            AssetImage("images/avt$indextimage.png"),
-                      )),
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 10,
@@ -151,6 +109,7 @@ class _AddUserState extends State<AddUser> {
                         Get.to(ScanQR());
                       },
                       child: Card(
+                        elevation: 7,
                         child: ListTile(
                             leading: const Icon(
                               Icons.qr_code_scanner_outlined,
@@ -163,6 +122,63 @@ class _AddUserState extends State<AddUser> {
                     ),
                   ),
                   textfild(title: "Name ", valu: name),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Stack(
+                    children: [
+                      InkWell(
+                          onTap: () {
+                            Get.defaultDialog(
+                              title: "Avatar",
+                              content: Container(
+                                height: 200,
+                                child: NotificationListener<
+                                    OverscrollIndicatorNotification>(
+                                  onNotification: (overscroll) {
+                                    overscroll.disallowIndicator();
+                                    return true;
+                                  },
+                                  child: GridView.count(
+                                    // Create a grid with 2 columns. If you change the scrollDirection to
+                                    // horizontal, this produces 2 rows.
+                                    crossAxisCount: 3,
+                                    // Generate 100 widgets that display their index in the List.
+                                    children: List.generate(9, (index) {
+                                      return Center(
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              Get.back();
+                                              indextimage = index;
+
+                                              print(indextimage);
+                                            });
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 30,
+                                            backgroundColor: Colors.transparent,
+                                            backgroundImage: AssetImage(
+                                                "images/avt$index.png"),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 30,
+                            backgroundImage:
+                                AssetImage("images/avt$indextimage.png"),
+                          )),
+                      Icon(Icons.add_a_photo),
+                    ],
+                  ),
+                  const Spacer(),
                   TextButton(
                       onPressed: () {
                         Get.to(Login());

@@ -13,7 +13,6 @@ class AddPoint extends StatefulWidget {
   State<AddPoint> createState() => _AddPointState();
 }
 
-var ponitdebut;
 var point = 0;
 
 class _AddPointState extends State<AddPoint> {
@@ -64,7 +63,7 @@ class _AddPointState extends State<AddPoint> {
           Padding(
             padding: const EdgeInsets.only(right: 40, left: 40, top: 20),
             child: TextField(
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.text,
               decoration: const InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),

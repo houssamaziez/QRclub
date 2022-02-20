@@ -38,6 +38,7 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.group_outlined),
@@ -45,7 +46,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notification_important_sharp),
-            label: 'notification',
+            label: 'New',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
@@ -54,13 +55,12 @@ class _HomeState extends State<Home> {
         ],
         currentIndex: selectedIndex,
         selectedItemColor: Colors.deepOrange,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.black,
         showSelectedLabels: false,
         onTap: (z) {
           setState(() {
             selectedIndex = z;
           });
-          print(z);
         },
       ),
       key: _key,
