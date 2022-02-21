@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 String textQr = "";
-var name;
 
+// ignore: prefer_typing_uninitialized_variables
 var resultt;
-var doc;
 
 var storg = GetStorage();
 var storgavatar = GetStorage();
-var colors = Color(0xFF33665D);
+var colors = const Color(0xFF33665D);

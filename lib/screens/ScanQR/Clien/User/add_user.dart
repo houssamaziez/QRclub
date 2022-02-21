@@ -202,7 +202,7 @@ class _AddUserState extends State<AddUser> {
       child: TextField(
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
             borderSide: BorderSide(width: 1, color: colors),
           ),
           border: OutlineInputBorder(

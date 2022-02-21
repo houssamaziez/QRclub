@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:qrscanar/Controller/controller.dart';
 import 'package:qrscanar/Controller/var.dart';
 import 'package:qrscanar/screens/ScanQR/Clien/User/add_user.dart';
 import 'package:qrscanar/screens/ScanQR/admin/admin.dart';
 import 'package:qrscanar/screens/ScanQR/allmanmber/screenall.dart';
 import 'package:qrscanar/screens/home/notefication.dart';
+// ignore: unused_import
 import 'dart:async';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -22,6 +22,7 @@ goUrl({@required url}) async {
 
 //  profile user
 class Home extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final id;
 
   const Home({Key? key, this.id}) : super(key: key);
@@ -41,7 +42,7 @@ class _HomeState extends State<Home> {
         .collection(widget.id);
     var listwdget = [
       const AllMbr(),
-      Netification(),
+      const Netification(),
       profile(users: users),
     ];
     var title = ["All members", "Notification", "Profile"];
@@ -79,7 +80,8 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         title: Text(
           title[selectedIndex],
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -99,12 +101,12 @@ class _HomeState extends State<Home> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("images/cov.png"), fit: BoxFit.contain),
               ),
-              child: const Text(''),
+              child: Text(''),
             ),
             Card(
               child: ListTile(
@@ -128,7 +130,7 @@ class _HomeState extends State<Home> {
                 ),
                 title: const Text('All members'),
                 onTap: () {
-                  Get.to(() => AllMbr());
+                  Get.to(() => const AllMbr());
                 },
               ),
             ),
@@ -145,7 +147,7 @@ class _HomeState extends State<Home> {
                       content: TextField(
                           onChanged: (val) {
                             if (val == "080808") {
-                              Get.to(Admin());
+                              Get.to(const Admin());
                             }
                           },
                           obscureText: true));
@@ -156,7 +158,7 @@ class _HomeState extends State<Home> {
               height: MediaQuery.of(context).size.height * 0.30,
             ),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
                   const Text(
@@ -216,7 +218,7 @@ class _HomeState extends State<Home> {
       child: Stack(
         children: [
           SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.8,
               child: Column(
                 children: [
@@ -229,7 +231,7 @@ class _HomeState extends State<Home> {
                         elevation: 6,
                         child: Padding(
                           padding: const EdgeInsets.all(30.0),
-                          child: Container(
+                          child: SizedBox(
                             height: MediaQuery.of(context).size.height * 0.62,
                             child: Column(
                               children: [
@@ -351,7 +353,7 @@ class _HomeState extends State<Home> {
               stream: users.snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
-                  return Text(
+                  return const Text(
                     'No Data...',
                   );
                 } else {

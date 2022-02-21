@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qrscanar/Controller/function.dart';
 import 'package:qrscanar/screens/ScanQR/admin/rslt.dart';
+import 'package:qrscanar/screens/ScanQR/admin/screen_add_points.dart';
 
 class ScanQRAdmin extends StatefulWidget {
   @override
@@ -24,6 +26,11 @@ class _ScanQRAdminState extends State<ScanQRAdmin> {
           Get.off(Rslt(
             id: result?.code.toString(),
           ));
+        } else {
+          var h = await iduraccont(doc: result?.code.toString());
+          if (h == null) {
+            Get.offAll(AddPoint());
+          }
         }
       });
     });
@@ -32,6 +39,7 @@ class _ScanQRAdminState extends State<ScanQRAdmin> {
   @override
   void dispose() {
     controller?.dispose();
+
     super.dispose();
   }
 

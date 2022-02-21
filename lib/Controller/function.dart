@@ -10,7 +10,7 @@ Future<void> addpoint({point, doc}) async {
   }).then((value) async {
     await addpointAll(doc: doc, point: c + point);
     c = 0;
-    print("add data ");
+    // ignore: invalid_return_type_for_catch_error, avoid_print
   }).catchError((error) => print("Failed to add user: $error"));
 }
 
@@ -21,7 +21,9 @@ Future<void> addpointAll({point, doc}) async {
     'point': point,
   }).then((value) {
     c = 0;
+    // ignore: avoid_print
     print("add data ");
+    // ignore: avoid_print, invalid_return_type_for_catch_error
   }).catchError((error) => print("Failed to add user: $error"));
 }
 
@@ -37,7 +39,9 @@ Future<void> adduser({name, image, doc, point}) {
         'id': doc,
         'point': point,
       })
+      // ignore: avoid_print
       .then((value) => print("add data "))
+      // ignore: avoid_print
       .catchError((error) => print("Failed to add user: $error"));
 }
 
@@ -51,13 +55,18 @@ Future<void> adduserall({name, image, doc, point}) {
         'id': doc,
         'point': point,
       })
+      // ignore: avoid_print
       .then((value) => print("add data "))
+      // ignore: avoid_print
       .catchError((error) => print("Failed to add user: $error"));
 }
 
+// ignore: prefer_typing_uninitialized_variables
 var c;
+// ignore: prefer_typing_uninitialized_variables
 var haveuser;
 getDocs({doc}) async {
+  // ignore: prefer_typing_uninitialized_variables
   var a;
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('users')
@@ -68,15 +77,10 @@ getDocs({doc}) async {
     a = querySnapshot.docs[i];
   }
   c = a["point"];
-  print(
-      "____________________________________________________________________________________________________________________________________________");
-
-  print(c.toString());
-  print(
-      "________________________________________________________________________________________________________________");
 }
 
 vrfiuser({doc}) async {
+  // ignore: prefer_typing_uninitialized_variables
   var a;
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('users')
@@ -87,11 +91,6 @@ vrfiuser({doc}) async {
     a = querySnapshot.docs[i].id;
   }
   haveuser = a;
-  print("_________________________________________________________________");
-
-  print(c.toString());
-  print(
-      "________________________________________________________________________________________________________________");
 }
 
 StreamBuilder<QuerySnapshot<Object?>> realtimedata({
@@ -110,6 +109,7 @@ StreamBuilder<QuerySnapshot<Object?>> realtimedata({
 }
 
 iduraccont({doc}) async {
+  // ignore: prefer_typing_uninitialized_variables
   var a;
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('users')

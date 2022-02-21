@@ -28,22 +28,22 @@ class _AddPointState extends State<AddPoint> {
           onPressed: () {
             Get.back();
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.red,
+            color: colors,
           ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Add poits ",
-          style: TextStyle(color: Colors.red),
+          style: TextStyle(color: colors),
         ),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.qr_code_scanner_rounded),
-        backgroundColor: Colors.red,
+        backgroundColor: colors,
         onPressed: () async {
           Get.to(ScanQRAdmin());
         },
@@ -55,23 +55,21 @@ class _AddPointState extends State<AddPoint> {
 
           Text(
             point.toString(),
-            style: const TextStyle(
-                color: Color(0xFFFD5D5D),
-                fontSize: 40,
-                fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: colors, fontSize: 40, fontWeight: FontWeight.bold),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 40, left: 40, top: 20),
             child: TextField(
               keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
-                  borderSide: BorderSide(width: 1, color: Colors.red),
+                  borderSide: BorderSide(width: 1, color: colors),
                 ),
                 border: OutlineInputBorder(
                     borderSide: BorderSide(
-                  color: Colors.red,
+                  color: colors,
                   width: 5,
                 )),
                 hintText: "Num points",

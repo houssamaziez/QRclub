@@ -4,10 +4,13 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:qrscanar/Controller/var.dart';
 import 'package:qrscanar/screens/ScanQR/admin/screen_add_notf.dart';
+import 'package:qrscanar/screens/ScanQR/admin/screen_add_points.dart';
 import 'package:qrscanar/screens/home/Home.dart';
 
 // ignore: must_be_immutable
 class Admin extends StatefulWidget {
+  const Admin({Key? key}) : super(key: key);
+
   @override
   State<Admin> createState() => _AdminState();
 }
@@ -232,7 +235,7 @@ class _AdminState extends State<Admin> {
             child: const Icon(Icons.qr_code_scanner),
             backgroundColor: colors,
             onTap: () {
-              Get.to(const AddNotf());
+              Get.to(AddPoint());
             },
             label: 'Add Points',
             labelStyle: const TextStyle(
