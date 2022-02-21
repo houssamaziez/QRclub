@@ -43,6 +43,9 @@ dependencies:
   intl: ^0.17.0
   flutter_speed_dial: ^5.0.0+1
   url_launcher: ^6.0.20
+  connectivity_plus: ^2.2.1
+  connectivity: ^3.0.6
+  popover: ^0.2.6+3
   
 
 dev_dependencies:

@@ -23,24 +23,19 @@ class _ScanQRAdminState extends State<ScanQRAdmin> {
         result = event;
 
         if (result != null) {
-          Get.off(Rslt(
-            id: result?.code.toString(),
-          ));
-        } else {
           var h = await iduraccont(doc: result?.code.toString());
+
           if (h == null) {
-            Get.offAll(AddPoint());
+            Get.to(AddPoint());
+            Get.snackbar("title", "message");
+          } else {
+            Get.off(Rslt(
+              id: result?.code.toString(),
+            ));
           }
         }
       });
     });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-
-    super.dispose();
   }
 
   @override

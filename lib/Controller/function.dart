@@ -27,7 +27,7 @@ Future<void> addpointAll({point, doc}) async {
   }).catchError((error) => print("Failed to add user: $error"));
 }
 
-Future<void> adduser({name, image, doc, point}) {
+Future<void> adduser({name, image, doc, point, group1}) {
   CollectionReference users =
       FirebaseFirestore.instance.collection('users').doc(doc).collection(doc);
 
@@ -35,6 +35,7 @@ Future<void> adduser({name, image, doc, point}) {
       .doc(doc)
       .set({
         'name': name,
+        'group': group1,
         'image': "images/avt$image.png",
         'id': doc,
         'point': point,
@@ -45,12 +46,13 @@ Future<void> adduser({name, image, doc, point}) {
       .catchError((error) => print("Failed to add user: $error"));
 }
 
-Future<void> adduserall({name, image, doc, point}) {
+Future<void> adduserall({name, image, doc, point, group1}) {
   CollectionReference users = FirebaseFirestore.instance.collection('Allusers');
   return users
       .doc(doc)
       .set({
         'name': name,
+        'group': group1,
         'image': "images/avt$image.png",
         'id': doc,
         'point': point,
@@ -64,7 +66,6 @@ Future<void> adduserall({name, image, doc, point}) {
 // ignore: prefer_typing_uninitialized_variables
 var c;
 // ignore: prefer_typing_uninitialized_variables
-var haveuser;
 getDocs({doc}) async {
   // ignore: prefer_typing_uninitialized_variables
   var a;
@@ -77,20 +78,6 @@ getDocs({doc}) async {
     a = querySnapshot.docs[i];
   }
   c = a["point"];
-}
-
-vrfiuser({doc}) async {
-  // ignore: prefer_typing_uninitialized_variables
-  var a;
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(doc)
-      .collection(doc)
-      .get();
-  for (int i = 0; i < querySnapshot.docs.length; i++) {
-    a = querySnapshot.docs[i].id;
-  }
-  haveuser = a;
 }
 
 StreamBuilder<QuerySnapshot<Object?>> realtimedata({

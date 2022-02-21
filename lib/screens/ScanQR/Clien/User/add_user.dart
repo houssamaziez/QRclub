@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qrscanar/Controller/function.dart';
 import 'package:qrscanar/Controller/var.dart';
+import 'package:qrscanar/screens/ScanQR/Clien/User/group.dart';
 import 'package:qrscanar/screens/ScanQR/Clien/User/login.dart';
 import 'package:qrscanar/screens/ScanQR/scan_qr.dart';
 
@@ -46,9 +47,17 @@ class _AddUserState extends State<AddUser> {
               var h = await iduraccont(doc: id);
               if (h == null) {
                 await adduser(
-                    doc: id, point: 0, name: name, image: indextimage);
+                    doc: id,
+                    point: 0,
+                    name: name,
+                    image: indextimage,
+                    group1: group);
                 await adduserall(
-                    doc: id, point: 0, name: name, image: indextimage);
+                    doc: id,
+                    point: 0,
+                    name: name,
+                    image: indextimage,
+                    group1: group);
                 storg.write("id", id);
 
                 Get.to(Home(
@@ -84,12 +93,12 @@ class _AddUserState extends State<AddUser> {
           },
           child: SingleChildScrollView(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.86,
+              height: MediaQuery.of(context).size.height * 01,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.42,
+                    height: MediaQuery.of(context).size.height * 0.4,
                     width: MediaQuery.of(context).size.width,
                     child: Image.asset("images/img2.png"),
                   ),
@@ -118,7 +127,7 @@ class _AddUserState extends State<AddUser> {
                       ),
                     ),
                   ),
-                  textfild(title: "Name ", valu: name),
+                  textfild(title: "Full name", valu: name),
                   const SizedBox(
                     height: 20,
                   ),
@@ -176,6 +185,8 @@ class _AddUserState extends State<AddUser> {
                       ],
                     ),
                   ),
+                  Button(),
+
                   const Spacer(),
                   TextButton(
                       onPressed: () {

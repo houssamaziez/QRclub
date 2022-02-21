@@ -80,8 +80,7 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         title: Text(
           title[selectedIndex],
-          style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: colors, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -97,7 +96,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.grey.shade100,
       body: listwdget[selectedIndex],
       drawer: Drawer(
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -163,15 +162,18 @@ class _HomeState extends State<Home> {
                 children: [
                   const Text(
                     'Developed by Aziez Houssam Eddine',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.grey, fontSize: 10),
                   ),
                   TextButton(
                       onPressed: () {
                         launchURL();
                       },
-                      child: const Text(
-                        "contact",
-                        style: TextStyle(fontSize: 10),
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Text(
+                          "contact",
+                          style: TextStyle(fontSize: 10),
+                        ),
                       ))
                 ],
               ),
@@ -218,7 +220,7 @@ class _HomeState extends State<Home> {
       child: Stack(
         children: [
           SingleChildScrollView(
-            child: SizedBox(
+            child: Container(
               height: MediaQuery.of(context).size.height * 0.8,
               child: Column(
                 children: [
@@ -231,7 +233,7 @@ class _HomeState extends State<Home> {
                         elevation: 6,
                         child: Padding(
                           padding: const EdgeInsets.all(30.0),
-                          child: SizedBox(
+                          child: Container(
                             height: MediaQuery.of(context).size.height * 0.62,
                             child: Column(
                               children: [
@@ -260,6 +262,7 @@ class _HomeState extends State<Home> {
                                                     .size
                                                     .height *
                                                 0.038,
+                                            color: colors,
                                             fontWeight: FontWeight.bold),
                                       );
                                     }
@@ -274,10 +277,42 @@ class _HomeState extends State<Home> {
                                 ),
                                 // QR
                                 qr(context: context, code: widget.id),
-                                // ID
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.06,
+                                      MediaQuery.of(context).size.height * 0.02,
+                                ),
+
+                                // Group
+                                StreamBuilder<QuerySnapshot>(
+                                  stream: users.snapshots(),
+                                  builder: (context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const Text(
+                                        'No Data...',
+                                      );
+                                    } else {
+                                      final posts = snapshot.data?.docs;
+
+                                      resultt = posts![0]["group"];
+
+                                      return Text(
+                                        "Group : " + resultt.toString(),
+                                        style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.024,
+                                            color: colors,
+                                            fontWeight: FontWeight.bold),
+                                      );
+                                    }
+                                  },
+                                ),
+
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.04,
                                 ),
                                 //  PONT
                                 Center(
@@ -315,8 +350,7 @@ class _HomeState extends State<Home> {
                                             child: Text(
                                               s.toString(),
                                               style: TextStyle(
-                                                  color:
-                                                      const Color(0xFFFD5D5D),
+                                                  color: colors,
                                                   fontSize:
                                                       MediaQuery.of(context)
                                                               .size
@@ -330,9 +364,12 @@ class _HomeState extends State<Home> {
                                     },
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   "Coins",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: colors,
+                                  ),
                                 )
                               ],
                             ),
@@ -353,7 +390,7 @@ class _HomeState extends State<Home> {
               stream: users.snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
-                  return const Text(
+                  return Text(
                     'No Data...',
                   );
                 } else {
@@ -382,7 +419,7 @@ class _HomeState extends State<Home> {
 
 qr({context, code}) {
   return QrImage(
-    data: "${code} ",
+    data: "${code}",
     size: MediaQuery.of(context).size.height * 0.2,
     backgroundColor: Colors.white,
     foregroundColor: Color(0xFF000000),

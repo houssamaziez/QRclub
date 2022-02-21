@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qrscanar/screens/ScanQR/screenstart.dart';
@@ -19,16 +20,31 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+contect() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.mobile) {
+    print(
+        "____________________________I am connected to a mobile network.____________________________");
+    // I am connected to a mobile network.
+  } else if (connectivityResult == ConnectivityResult.wifi) {
+    print(
+        "____________________________I am connected to a wifi network.____________________________");
+
+    // I am connected to a wifi network.
+  }
+}
+
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    contect();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return const GetMaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       home: Scaffold(
         body: ScreenStart(),
       ),

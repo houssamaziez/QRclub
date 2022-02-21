@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qrscanar/Controller/function.dart';
 import 'package:qrscanar/Controller/var.dart';
+import 'package:qrscanar/screens/ScanQR/admin/admin.dart';
 import 'package:qrscanar/screens/ScanQR/admin/scan_qr.dart';
 import 'package:qrscanar/screens/ScanQR/admin/screen_add_notf.dart';
 import 'package:qrscanar/screens/home/Home.dart';
@@ -19,6 +20,7 @@ class _AddPointState extends State<AddPoint> {
   var msgController = TextEditingController();
   var msgController2 = TextEditingController();
   var islod = false;
+
   // ignore: prefer_typing_uninitialized_variables
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class _AddPointState extends State<AddPoint> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Get.offAll(const Admin());
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -42,7 +44,7 @@ class _AddPointState extends State<AddPoint> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.qr_code_scanner_rounded),
+        child: const Icon(Icons.qr_code_scanner_rounded),
         backgroundColor: colors,
         onPressed: () async {
           Get.to(ScanQRAdmin());
@@ -64,7 +66,7 @@ class _AddPointState extends State<AddPoint> {
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: const BorderRadius.all(Radius.circular(4)),
                   borderSide: BorderSide(width: 1, color: colors),
                 ),
                 border: OutlineInputBorder(

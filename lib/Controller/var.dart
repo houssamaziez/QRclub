@@ -9,3 +9,4 @@ var resultt;
 var storg = GetStorage();
 var storgavatar = GetStorage();
 var colors = const Color(0xFF33665D);
+var group = "";

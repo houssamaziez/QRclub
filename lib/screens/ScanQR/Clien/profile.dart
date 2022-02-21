@@ -87,6 +87,7 @@ class _ProfileState extends State<Profile> {
                                                       .size
                                                       .height *
                                                   0.038,
+                                              color: colors,
                                               fontWeight: FontWeight.bold),
                                         );
                                       }
@@ -101,10 +102,42 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   // QR
                                   qr(context: context, code: widget.id),
-                                  // ID
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.06,
+                                        0.02,
+                                  ),
+
+                                  // Group
+                                  StreamBuilder<QuerySnapshot>(
+                                    stream: users.snapshots(),
+                                    builder: (context,
+                                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return const Text(
+                                          'No Data...',
+                                        );
+                                      } else {
+                                        final posts = snapshot.data?.docs;
+
+                                        resultt = posts![0]["group"];
+
+                                        return Text(
+                                          "Group : " + resultt.toString(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.024,
+                                              color: colors,
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                      }
+                                    },
+                                  ),
+
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.04,
                                   ),
                                   //  PONT
                                   Center(
@@ -159,10 +192,12 @@ class _ProfileState extends State<Profile> {
                                       },
                                     ),
                                   ),
-                                  const Text(
+                                  Text(
                                     "Coins",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: colors,
+                                    ),
                                   )
                                 ],
                               ),
@@ -208,16 +243,16 @@ class _ProfileState extends State<Profile> {
         ),
       ),
       drawer: Drawer(
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("images/cov.png"), fit: BoxFit.contain),
               ),
-              child: const Text(''),
+              child: Text(''),
             ),
             Card(
               child: ListTile(
@@ -308,26 +343,29 @@ class _ProfileState extends State<Profile> {
 
   newMethod({point}) {
     if (point <= 10) {
-      return AssetImage("images/lvl1.gif");
+      return const AssetImage("images/lvl1.gif");
     }
     if (point > 10 && point <= 20) {
-      return AssetImage("images/lvl2.gif");
+      return const AssetImage("images/lvl2.gif");
     }
     if (point > 20 && point <= 40) {
-      return AssetImage("images/lvl3.gif");
+      return const AssetImage("images/lvl3.gif");
     }
     if (point > 40 && point <= 60) {
-      return AssetImage("images/lvl4.gif");
+      return const AssetImage("images/lvl4.gif");
     }
-    if (point > 60) {
-      return AssetImage("images/lvl5.gif");
+    if (point > 60 && point <= 80) {
+      return const AssetImage("images/lvl5.gif");
+    }
+    if (point > 80) {
+      return const AssetImage("images/lvl6.gif");
     }
   }
 }
 
 qr({context, code}) {
   return QrImage(
-    data: "${code} ",
+    data: "${code}",
     size: MediaQuery.of(context).size.height * 0.2,
     backgroundColor: Colors.white,
     foregroundColor: Color(0xFF000000),

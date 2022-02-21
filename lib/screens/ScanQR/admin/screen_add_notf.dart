@@ -66,11 +66,19 @@ class _AddNotfState extends State<AddNotf> {
                     .format(DateTime.now())
                     .toString(),
                 'text': notification,
+                'class': DateTime.now(),
               }).then((value) {
+                Get.snackbar(titlenot, notification,
+                    icon: const Icon(
+                      Icons.notifications_active,
+                      color: Colors.red,
+                    ));
                 msgController.clear();
                 titlenot = "";
                 notification = "";
+
                 msgController2.clear();
+
                 setState(() {
                   islod = false;
                 });

@@ -29,18 +29,15 @@ class _ScanScanQR1State extends State<ScanQR1> {
         if (result != null) {
           id = result?.code;
 
-          vrfiuser(doc: id);
-          if (haveuser == null) {
+          var h = await iduraccont(doc: id);
+          if (h == null) {
+            Get.back();
+            Get.snackbar("Exapsion", "This account does not exist");
           } else {
-            var h = await iduraccont(doc: id);
-            if (h == null) {
-              Get.snackbar("Exapsion", "this is an existing accont");
-            } else {
-              Get.off(() => Home(
-                    id: id,
-                  ));
-              await storg.write("id", id);
-            }
+            Get.off(() => Home(
+                  id: id,
+                ));
+            await storg.write("id", id);
           }
         }
       });
@@ -96,7 +93,7 @@ class _ScanScanQRState extends State<ScanQR> {
         result = event;
         if (result != null) {
           id = result?.code;
-          Get.to(() => AddUser());
+          Get.off(() => AddUser());
         }
       });
     });

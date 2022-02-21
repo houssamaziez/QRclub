@@ -104,6 +104,7 @@ class _RsltState extends State<Rslt> {
                                                       .size
                                                       .height *
                                                   0.038,
+                                              color: colors,
                                               fontWeight: FontWeight.bold),
                                         );
                                       }
@@ -118,10 +119,42 @@ class _RsltState extends State<Rslt> {
                                   ),
                                   // QR
                                   qr(context: context, code: widget.id),
-                                  // ID
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.06,
+                                        0.02,
+                                  ),
+
+                                  // Group
+                                  StreamBuilder<QuerySnapshot>(
+                                    stream: users.snapshots(),
+                                    builder: (context,
+                                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return const Text(
+                                          'No Data...',
+                                        );
+                                      } else {
+                                        final posts = snapshot.data?.docs;
+
+                                        resultt = posts![0]["group"];
+
+                                        return Text(
+                                          "Group : " + resultt.toString(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.024,
+                                              color: colors,
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                      }
+                                    },
+                                  ),
+
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.04,
                                   ),
                                   //  PONT
                                   Center(
@@ -176,10 +209,12 @@ class _RsltState extends State<Rslt> {
                                       },
                                     ),
                                   ),
-                                  const Text(
+                                  Text(
                                     "Coins",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: colors,
+                                    ),
                                   )
                                 ],
                               ),

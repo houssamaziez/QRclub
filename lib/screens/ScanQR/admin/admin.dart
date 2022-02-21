@@ -115,6 +115,7 @@ class _AdminState extends State<Admin> {
                                           padding: const EdgeInsets.only(
                                               right: 40, left: 40, top: 20),
                                           child: TextField(
+                                            keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
                                               focusedBorder: OutlineInputBorder(
                                                 borderRadius: BorderRadius.all(
