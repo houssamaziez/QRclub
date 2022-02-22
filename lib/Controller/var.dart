@@ -10,3 +10,7 @@ var storg = GetStorage();
 var storgavatar = GetStorage();
 var colors = const Color(0xFF33665D);
 var group = "";
+
+var passwordadmine;
+var urlL;
+var version0;

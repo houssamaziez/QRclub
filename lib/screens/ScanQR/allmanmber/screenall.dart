@@ -51,39 +51,61 @@ class _AllMbrState extends State<AllMbr> {
                       child: Stack(
                         children: [
                           Card(
-                            child: ListTile(
-                              trailing: Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: newMethod(
-                                            point: posts![index]["point"]))),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                width: MediaQuery.of(context).size.width * 0.15,
-                                child: Center(
-                                  child: Text(
-                                    posts[index]["point"].toString(),
-                                    style: TextStyle(
-                                        color: colors,
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                0.022,
-                                        fontWeight: FontWeight.bold),
+                            child: Container(
+                              height: 70,
+                              child: ListTile(
+                                trailing: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: newMethod(
+                                              point: posts![index]["point"]))),
+                                  height: double.infinity,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.26,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("     "),
+                                      Spacer(),
+                                      Center(
+                                        child: Text(
+                                          posts[index]["point"].toString(),
+                                          style: TextStyle(
+                                              color: colors,
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.04,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        "SC",
+                                        style: TextStyle(
+                                            color: colors,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.033,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
                                   ),
                                 ),
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: 25,
+                                  child: Image.asset(posts[index]["image"]),
+                                ),
+                                title: Text(posts[index]["name"]),
+                                subtitle: Text(posts[index]["group"]),
                               ),
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 25,
-                                child: Image.asset(posts[index]["image"]),
-                              ),
-                              title: Text(posts[index]["name"]),
-                              subtitle: Text(posts[index]["id"]),
                             ),
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.only(bottom: 30, right: 10),
+                                const EdgeInsets.only(bottom: 50, right: 7),
                             child: CircleAvatar(
                               backgroundColor: colors,
                               radius: 14,
@@ -91,7 +113,7 @@ class _AllMbrState extends State<AllMbr> {
                                 (index + 1).toString(),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ));

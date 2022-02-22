@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:qrscanar/Controller/var.dart';
 import 'package:qrscanar/screens/ScanQR/Clien/profile.dart';
 import 'package:qrscanar/screens/ScanQR/screen_qr.dart';
+import 'package:qrscanar/screens/updata/updata.dart';
 
 import '../../main.dart';
 import '../home/Home.dart';
@@ -21,11 +22,15 @@ class _ScreenStartState extends State<ScreenStart> {
   @override
   void initState() {
     Timer(Duration(seconds: 6), () {
-      storg.read("id") == null
-          ? Get.off(() => AddUser())
-          : Get.off(() => Home(
-                id: storg.read("id"),
-              ));
+      if (version0 == "1.0") {
+        storg.read("id") == null
+            ? Get.off(() => AddUser())
+            : Get.off(() => Home(
+                  id: storg.read("id"),
+                ));
+      } else {
+        Get.offAll(Updata());
+      }
     });
     super.initState();
   }

@@ -33,6 +33,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var selectedIndex = 0;
+  var chnavter = false;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +146,7 @@ class _HomeState extends State<Home> {
                       title: "Password",
                       content: TextField(
                           onChanged: (val) {
-                            if (val == "080808") {
+                            if (val == passwordadmine) {
                               Get.to(const Admin());
                             }
                           },
@@ -210,11 +211,18 @@ class _HomeState extends State<Home> {
     if (point > 40 && point <= 60) {
       return const AssetImage("images/lvl4.gif");
     }
-    if (point > 60) {
+    if (point > 60 && point <= 80) {
       return const AssetImage("images/lvl5.gif");
+    }
+    if (point > 80) {
+      return const AssetImage("images/lvl6.gif");
     }
   }
 
+  var point;
+  var groupp;
+  var chngename = false;
+  var chngenamegroupp = false;
   profile({users}) {
     return Center(
       child: Stack(
@@ -255,15 +263,132 @@ class _HomeState extends State<Home> {
 
                                       resultt = posts![0]["name"];
 
-                                      return Text(
-                                        resultt.toString(),
-                                        style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.038,
-                                            color: colors,
-                                            fontWeight: FontWeight.bold),
+                                      return Stack(
+                                        children: [
+                                          Text(
+                                            resultt.toString(),
+                                            style: TextStyle(
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.038,
+                                                color: colors,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Get.defaultDialog(
+                                                        confirm: TextButton(
+                                                            onPressed:
+                                                                () async {
+                                                              // coll1 users
+                                                              if (point ==
+                                                                  null) {
+                                                              } else {
+                                                                setState(() {
+                                                                  chngename =
+                                                                      true;
+                                                                });
+                                                                await FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(storg
+                                                                        .read(
+                                                                            "id"))
+                                                                    .collection(
+                                                                        storg.read(
+                                                                            "id"))
+                                                                    .doc(storg
+                                                                        .read(
+                                                                            "id"))
+                                                                    .update({
+                                                                  'name': point,
+                                                                });
+
+                                                                // coll1 All users
+
+                                                                await FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'Allusers')
+                                                                    .doc(storg
+                                                                        .read(
+                                                                            "id"))
+                                                                    .update({
+                                                                  'name': point,
+                                                                });
+                                                                setState(() {
+                                                                  chngename =
+                                                                      false;
+                                                                });
+                                                                Get.back();
+                                                              }
+                                                            },
+                                                            child: chngename ==
+                                                                    true
+                                                                ? CircularProgressIndicator(
+                                                                    color:
+                                                                        colors,
+                                                                  )
+                                                                : Text(
+                                                                    "Confirm",
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                            colors),
+                                                                  )),
+                                                        title: 'Edit',
+                                                        content: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 40,
+                                                                  left: 40,
+                                                                  top: 20),
+                                                          child: TextField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .text,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              focusedBorder:
+                                                                  OutlineInputBorder(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            4)),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            1,
+                                                                        color:
+                                                                            colors),
+                                                              ),
+                                                              border:
+                                                                  OutlineInputBorder(
+                                                                      borderSide:
+                                                                          BorderSide(
+                                                                color: colors,
+                                                                width: 5,
+                                                              )),
+                                                              hintText:
+                                                                  "Change your name",
+                                                            ),
+                                                            onChanged: (val) {
+                                                              setState(() {
+                                                                point = val;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ));
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.edit,
+                                                  )))
+                                        ],
                                       );
                                     }
                                   },
@@ -273,13 +398,13 @@ class _HomeState extends State<Home> {
                                 ),
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.03,
+                                      MediaQuery.of(context).size.height * 0.01,
                                 ),
                                 // QR
                                 qr(context: context, code: widget.id),
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.02,
+                                      MediaQuery.of(context).size.height * 0.0,
                                 ),
 
                                 // Group
@@ -296,23 +421,141 @@ class _HomeState extends State<Home> {
 
                                       resultt = posts![0]["group"];
 
-                                      return Text(
-                                        "Group : " + resultt.toString(),
-                                        style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.024,
-                                            color: colors,
-                                            fontWeight: FontWeight.bold),
+                                      return Stack(
+                                        children: [
+                                          Text(
+                                            "Group : " + resultt.toString(),
+                                            style: TextStyle(
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.024,
+                                                color: colors,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Positioned(
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Get.defaultDialog(
+                                                        confirm: TextButton(
+                                                            onPressed:
+                                                                () async {
+                                                              // coll1 users
+                                                              if (groupp ==
+                                                                  null) {
+                                                              } else {
+                                                                setState(() {
+                                                                  chngenamegroupp =
+                                                                      true;
+                                                                });
+                                                                await FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(storg
+                                                                        .read(
+                                                                            "id"))
+                                                                    .collection(
+                                                                        storg.read(
+                                                                            "id"))
+                                                                    .doc(storg
+                                                                        .read(
+                                                                            "id"))
+                                                                    .update({
+                                                                  'group':
+                                                                      groupp,
+                                                                });
+
+                                                                // coll1 All users
+
+                                                                await FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'Allusers')
+                                                                    .doc(storg
+                                                                        .read(
+                                                                            "id"))
+                                                                    .update({
+                                                                  'group':
+                                                                      groupp,
+                                                                });
+                                                                setState(() {
+                                                                  chngenamegroupp =
+                                                                      false;
+                                                                });
+                                                                Get.back();
+                                                              }
+                                                            },
+                                                            child: chngename ==
+                                                                    true
+                                                                ? CircularProgressIndicator(
+                                                                    color:
+                                                                        colors,
+                                                                  )
+                                                                : Text(
+                                                                    "Confirm",
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                            colors),
+                                                                  )),
+                                                        title: 'Edit',
+                                                        content: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 40,
+                                                                  left: 40,
+                                                                  top: 20),
+                                                          child: TextField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .text,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              focusedBorder:
+                                                                  OutlineInputBorder(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            4)),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            1,
+                                                                        color:
+                                                                            colors),
+                                                              ),
+                                                              border:
+                                                                  OutlineInputBorder(
+                                                                      borderSide:
+                                                                          BorderSide(
+                                                                color: colors,
+                                                                width: 5,
+                                                              )),
+                                                              hintText:
+                                                                  "Change your group ",
+                                                            ),
+                                                            onChanged: (val) {
+                                                              setState(() {
+                                                                groupp = val;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ));
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.edit,
+                                                    size: 20,
+                                                  )))
+                                        ],
                                       );
                                     }
                                   },
                                 ),
 
                                 SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.024,
                                 ),
                                 //  PONT
                                 Center(
@@ -398,13 +641,94 @@ class _HomeState extends State<Home> {
 
                   resultt = posts![0]["image"];
 
-                  return CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 60,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 50,
-                      child: Image.asset(resultt),
+                  return Center(
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 60,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 50,
+                            child: chnavter == true
+                                ? CircularProgressIndicator(
+                                    color: colors,
+                                  )
+                                : Image.asset(resultt),
+                          ),
+                        ),
+                        Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: IconButton(
+                                onPressed: () {
+                                  Get.defaultDialog(
+                                    title: "Avatar",
+                                    content: Container(
+                                      height: 200,
+                                      child: NotificationListener<
+                                          OverscrollIndicatorNotification>(
+                                        onNotification: (overscroll) {
+                                          overscroll.disallowIndicator();
+                                          return true;
+                                        },
+                                        child: GridView.count(
+                                          crossAxisCount: 3,
+                                          children: List.generate(9, (index) {
+                                            return Center(
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  setState(() async {
+                                                    // coll1 users
+
+                                                    setState(() {
+                                                      chnavter = true;
+                                                    });
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('users')
+                                                        .doc(storg.read('id'))
+                                                        .collection(
+                                                            storg.read('id'))
+                                                        .doc(storg.read('id'))
+                                                        .update({
+                                                      'image':
+                                                          "images/avt${index.toString()}.png",
+                                                    });
+
+                                                    // coll1 All users
+
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('Allusers')
+                                                        .doc(storg.read('id'))
+                                                        .update({
+                                                      'image':
+                                                          "images/avt${index.toString()}.png",
+                                                    });
+                                                    setState(() {
+                                                      chnavter = false;
+                                                    });
+                                                    Get.back();
+                                                  });
+                                                },
+                                                child: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  backgroundImage: AssetImage(
+                                                      "images/avt$index.png"),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.edit)))
+                      ],
                     ),
                   );
                 }

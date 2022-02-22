@@ -93,12 +93,12 @@ class _AddUserState extends State<AddUser> {
           },
           child: SingleChildScrollView(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 01,
+              height: MediaQuery.of(context).size.height * 0.87,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.4,
+                    height: MediaQuery.of(context).size.height * 0.35,
                     width: MediaQuery.of(context).size.width,
                     child: Image.asset("images/img2.png"),
                   ),
@@ -187,7 +187,6 @@ class _AddUserState extends State<AddUser> {
                   ),
                   Button(),
 
-                  const Spacer(),
                   TextButton(
                       onPressed: () {
                         Get.to(Login());

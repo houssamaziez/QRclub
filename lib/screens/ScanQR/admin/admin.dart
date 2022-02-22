@@ -24,7 +24,8 @@ class _AdminState extends State<Admin> {
   var msgController2 = TextEditingController();
   var islod = false;
   var point;
-
+  var addpointleading = false;
+  var deleltleading = false;
   // ignore: prefer_typing_uninitialized_variables
   @override
   Widget build(BuildContext context) {
@@ -85,6 +86,9 @@ class _AdminState extends State<Admin> {
                                               // coll1 users
                                               if (point == null) {
                                               } else {
+                                                setState(() {
+                                                  addpointleading = true;
+                                                });
                                                 await FirebaseFirestore.instance
                                                     .collection('users')
                                                     .doc(posts![index]["id"])
@@ -103,13 +107,21 @@ class _AdminState extends State<Admin> {
                                                     .update({
                                                   'point': int.parse(point),
                                                 });
+                                                setState(() {
+                                                  addpointleading = false;
+                                                });
                                                 Get.back();
                                               }
                                             },
-                                            child: Text(
-                                              "Confirm",
-                                              style: TextStyle(color: colors),
-                                            )),
+                                            child: addpointleading == true
+                                                ? CircularProgressIndicator(
+                                                    color: colors,
+                                                  )
+                                                : Text(
+                                                    "Confirm",
+                                                    style: TextStyle(
+                                                        color: colors),
+                                                  )),
                                         title: 'Edit',
                                         content: Padding(
                                           padding: const EdgeInsets.only(
@@ -182,6 +194,9 @@ class _AdminState extends State<Admin> {
                                     Get.defaultDialog(
                                         confirm: TextButton(
                                             onPressed: () async {
+                                              setState(() {
+                                                deleltleading = true;
+                                              });
                                               await FirebaseFirestore.instance
                                                   .collection('users')
                                                   .doc(posts[index]["id"])
@@ -198,12 +213,20 @@ class _AdminState extends State<Admin> {
                                                   .collection('Allusers')
                                                   .doc(posts[index]["id"])
                                                   .delete();
+                                              setState(() {
+                                                deleltleading = false;
+                                              });
                                               Get.back();
                                             },
-                                            child: Text(
-                                              "Confirm",
-                                              style: TextStyle(color: colors),
-                                            )),
+                                            child: deleltleading == true
+                                                ? CircularProgressIndicator(
+                                                    color: colors,
+                                                  )
+                                                : Text(
+                                                    "Confirm",
+                                                    style: TextStyle(
+                                                        color: colors),
+                                                  )),
                                         title: 'Delete',
                                         content: const Text(
                                             "Do you want to delete this person"));
