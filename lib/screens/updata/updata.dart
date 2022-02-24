@@ -20,7 +20,7 @@ class Updata extends StatelessWidget {
             ),
             child: InkWell(
               onTap: () {
-                launchURL();
+                launchURL1();
               },
               child: Card(
                 elevation: 7,
@@ -45,7 +45,7 @@ class Updata extends StatelessWidget {
   }
 }
 
-launchURL() async {
+launchURL1() async {
   if (!await launch(urlL))
     throw 'Could not launch https://linktr.ee/houssamaziez';
 }

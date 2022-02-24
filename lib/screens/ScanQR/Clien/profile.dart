@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.038,
+                                                  0.03,
                                               color: colors,
                                               fontWeight: FontWeight.bold),
                                         );
@@ -151,8 +151,22 @@ class _ProfileState extends State<Profile> {
                                           AsyncSnapshot<QuerySnapshot>
                                               snapshot) {
                                         if (!snapshot.hasData) {
-                                          return const Text(
-                                            'No Data...',
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image:
+                                                        newMethod(point: 0))),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.15,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4,
+                                            child: Center(
+                                              child: spinkit,
+                                            ),
                                           );
                                         } else {
                                           final posts = snapshot.data?.docs;
@@ -218,8 +232,14 @@ class _ProfileState extends State<Profile> {
                 stream: users.snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
-                    return Text(
-                      'No Data...',
+                    return CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 60,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 50,
+                        child: spinkit,
+                      ),
                     );
                   } else {
                     final posts = snapshot.data?.docs;
@@ -292,7 +312,7 @@ class _ProfileState extends State<Profile> {
                       title: "Password",
                       content: TextField(
                           onChanged: (val) {
-                            if (val == passwordadmine) {
+                            if (val == Password.read("Password")) {
                               Get.to(Admin());
                             }
                           },
@@ -364,6 +384,9 @@ class _ProfileState extends State<Profile> {
 }
 
 qr({context, code}) {
+  if (code == null) {
+    code = "houssam eddine";
+  }
   return QrImage(
     data: "${code}",
     size: MediaQuery.of(context).size.height * 0.2,

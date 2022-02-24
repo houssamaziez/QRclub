@@ -31,8 +31,8 @@ class _ScanScanQR1State extends State<ScanQR1> {
 
           var h = await iduraccont(doc: id);
           if (h == null) {
+            storg.write("id", id);
             Get.back();
-            Get.snackbar("Exapsion", "This account does not exist");
           } else {
             Get.off(() => Home(
                   id: id,

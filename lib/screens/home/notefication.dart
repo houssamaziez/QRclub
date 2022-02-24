@@ -19,56 +19,58 @@ class _NetificationState extends State<Netification> {
           .orderBy("class", descending: true)
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return const Text(
-            'No Data...',
-          );
-        } else {
-          final posts = snapshot.data?.docs;
+        try {
+          if (!snapshot.hasData) {
+            return spinkit;
+          } else {
+            final posts = snapshot.data?.docs;
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              await Future.delayed(Duration(seconds: 2));
-              setState(() {
-                setState(() {});
-              });
-            },
-            child: ListView.builder(
-              itemCount: posts?.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, right: 10, top: 10),
-                    child: InkWell(
-                      onTap: () {},
-                      child: Card(
-                        child: SizedBox(
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.notifications,
-                              color: colors,
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10,
+            return RefreshIndicator(
+              onRefresh: () async {
+                await Future.delayed(Duration(seconds: 2));
+                setState(() {
+                  setState(() {});
+                });
+              },
+              child: ListView.builder(
+                itemCount: posts?.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: InkWell(
+                        onTap: () {},
+                        child: Card(
+                          child: SizedBox(
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.notifications,
+                                color: colors,
                               ),
-                              child: Text(posts![index]["title"]),
+                              title: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                ),
+                                child: Text(posts![index]["title"]),
+                              ),
+                              subtitle: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 30, bottom: 30),
+                                child: Text(posts[index]["text"]),
+                              ),
+                              trailing: Text(posts[index]["date"].toString(),
+                                  style: const TextStyle(
+                                      fontSize: 10, color: Colors.grey)),
                             ),
-                            subtitle: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 30, bottom: 30),
-                              child: Text(posts[index]["text"]),
-                            ),
-                            trailing: Text(posts[index]["date"].toString(),
-                                style: const TextStyle(
-                                    fontSize: 10, color: Colors.grey)),
                           ),
                         ),
-                      ),
-                    ));
-              },
-            ),
-          );
+                      ));
+                },
+              ),
+            );
+          }
+        } catch (e) {
+          return spinkit;
         }
       },
     ));

@@ -16,6 +16,8 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+bool kk = false;
+
 class _LoginState extends State<Login> {
   var id;
 
@@ -26,20 +28,35 @@ class _LoginState extends State<Login> {
 
   var reslt = "";
   var name = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: colors,
-          onPressed: () {
-            if (reslt == "" && name == "") {
-            } else {
-              Get.offAll(Home(
-                id: reslt,
-              ));
+          onPressed: () async {
+            if (id = storg.read("id") != null) {
+              setState(() {
+                kk = true;
+              });
+              id = storg.read("id");
+
+              var h = await iduraccont(doc: id);
+              if (h == null) {
+                Get.snackbar("Error",
+                    "This account does not exist or the internet is weak");
+              } else {
+                Get.off(() => Home(
+                      id: id,
+                    ));
+                await storg.write("id", id);
+              }
+              setState(() {
+                kk = false;
+              });
             }
           },
-          child: const Icon(Icons.arrow_forward_ios),
+          child: kk == true ? spinkit : Icon(Icons.arrow_forward_ios),
         ),
         appBar: AppBar(
           centerTitle: true,

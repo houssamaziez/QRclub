@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qrscanar/Controller/configapp.dart';
 import 'package:qrscanar/Controller/var.dart';
 import 'package:qrscanar/screens/ScanQR/Clien/User/add_user.dart';
 import 'package:qrscanar/screens/ScanQR/admin/admin.dart';
 import 'package:qrscanar/screens/ScanQR/allmanmber/screenall.dart';
 import 'package:qrscanar/screens/home/notefication.dart';
+import 'package:qrscanar/screens/updata/updata.dart';
 // ignore: unused_import
 import 'dart:async';
 
@@ -32,11 +36,75 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  iduraccont() async {
+    var version;
+    var url;
+    String pass;
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Admine').get();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      setState(() async {
+        passwordadmine = pass = querySnapshot.docs[0]["pass"];
+        Password.write("Password", pass);
+        print(pass + "jezjfzne fzejnfzejnf ");
+        version0 = version = querySnapshot.docs[1]["version"];
+        // version = null;
+        urlL = url = querySnapshot.docs[1]["url"];
+      });
+    }
+
+    print(passwordadmine + " ");
+  }
+
   var selectedIndex = 0;
   var chnavter = false;
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.code);
+      return;
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+  }
 
   @override
+  void initState() {
+    iduraccont();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
+    super.initState();
+  }
+
+  late bool conx;
+  @override
   Widget build(BuildContext context) {
+    if (_connectionStatus.toString() == "ConnectivityResult.mobile" ||
+        _connectionStatus.toString() == "ConnectivityResult.wifi") {
+      setState(() {
+        conx = true;
+      });
+    } else {
+      setState(() {
+        conx = false;
+      });
+    }
     CollectionReference users = FirebaseFirestore.instance
         .collection('users')
         .doc(widget.id)
@@ -48,151 +116,181 @@ class _HomeState extends State<Home> {
     ];
     var title = ["All members", "Notification", "Profile"];
     final GlobalKey<ScaffoldState> _key = GlobalKey();
-
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group_outlined),
-            label: 'All members',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notification_important_sharp),
-            label: 'New',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: selectedIndex,
-        selectedItemColor: colors,
-        unselectedItemColor: Colors.black,
-        showSelectedLabels: false,
-        onTap: (z) {
-          setState(() {
-            selectedIndex = z;
-          });
-        },
-      ),
-      key: _key,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          title[selectedIndex],
-          style: TextStyle(color: colors, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-            onPressed: () {
-              _key.currentState?.openDrawer();
-            },
-            icon: Icon(
-              Icons.menu,
-              color: colors,
-            )),
-      ),
-      backgroundColor: Colors.grey.shade100,
-      body: listwdget[selectedIndex],
-      drawer: Drawer(
-        backgroundColor: Colors.white,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("images/cov.png"), fit: BoxFit.contain),
-              ),
-              child: Text(''),
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.group_outlined),
+              label: 'All members',
             ),
-            Card(
-              child: ListTile(
-                leading: Icon(
-                  Icons.home,
-                  color: colors,
-                ),
-                title: const Text('Home'),
-                onTap: () {
-                  Get.off(Home(
-                    id: storg.read("id"),
-                  ));
-                },
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notification_important_sharp),
+              label: 'New',
             ),
-            Card(
-              child: ListTile(
-                leading: Icon(
-                  Icons.group_outlined,
-                  color: colors,
-                ),
-                title: const Text('All members'),
-                onTap: () {
-                  Get.to(() => const AllMbr());
-                },
-              ),
-            ),
-            Card(
-              child: ListTile(
-                leading: Icon(
-                  Icons.admin_panel_settings,
-                  color: colors,
-                ),
-                title: const Text('Admine'),
-                onTap: () {
-                  Get.defaultDialog(
-                      title: "Password",
-                      content: TextField(
-                          onChanged: (val) {
-                            if (val == passwordadmine) {
-                              Get.to(const Admin());
-                            }
-                          },
-                          obscureText: true));
-                },
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.30,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  const Text(
-                    'Developed by Aziez Houssam Eddine',
-                    style: TextStyle(color: Colors.grey, fontSize: 10),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        launchURL();
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Text(
-                          "contact",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                      ))
-                ],
-              ),
-            ),
-            Card(
-              child: ListTile(
-                title: const Text('Log out'),
-                onTap: () async {
-                  Get.offAll(AddUser());
-                  storg.remove("id");
-                },
-                leading: Icon(
-                  Icons.exit_to_app,
-                  color: colors,
-                ),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: 'Profile',
             ),
           ],
+          currentIndex: selectedIndex,
+          selectedItemColor: colors,
+          unselectedItemColor: Colors.black,
+          showSelectedLabels: false,
+          onTap: (z) {
+            setState(() {
+              selectedIndex = z;
+            });
+          },
+        ),
+        key: _key,
+        appBar: AppBar(
+          flexibleSpace: conx == true
+              ? Container()
+              : Container(
+                  height: 20,
+                  child: Center(child: Text("No connection")),
+                  color: Colors.red,
+                ),
+          centerTitle: true,
+          title: Text(
+            title[selectedIndex],
+            style: TextStyle(color: colors, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+              onPressed: () {
+                _key.currentState?.openDrawer();
+              },
+              icon: Icon(
+                Icons.menu,
+                color: colors,
+              )),
+        ),
+        backgroundColor: Colors.grey.shade100,
+        body: listwdget[selectedIndex],
+        drawer: Drawer(
+          backgroundColor: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("images/cov.png"), fit: BoxFit.contain),
+                ),
+                child: Text(''),
+              ),
+              Card(
+                child: ListTile(
+                  leading: Icon(
+                    Icons.home,
+                    color: colors,
+                  ),
+                  title: const Text('Home'),
+                  onTap: () {
+                    Get.off(Home(
+                      id: storg.read("id"),
+                    ));
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  leading: Icon(
+                    Icons.group_outlined,
+                    color: colors,
+                  ),
+                  title: const Text('All members'),
+                  onTap: () {
+                    Get.to(() => const AllMbr());
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  leading: Icon(
+                    Icons.admin_panel_settings,
+                    color: colors,
+                  ),
+                  title: const Text('Admine'),
+                  onTap: () {
+                    Get.defaultDialog(
+                        title: "Password",
+                        content: TextField(
+                            onChanged: (val) {
+                              if (val == Password.read("Password")) {
+                                Get.offAll(const Admin());
+                              }
+                            },
+                            obscureText: true));
+                  },
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.20,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Developed by Aziez Houssam Eddine',
+                      style: TextStyle(color: Colors.grey, fontSize: 10),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          launchURL();
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Text(
+                            "contact",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ))
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  launchURL1();
+                },
+                child: version0 != "1.2"
+                    ? Card(
+                        elevation: 7,
+                        child: ListTile(
+                            leading: Icon(
+                              Icons.download,
+                              color: colors,
+                            ),
+                            title: Text(
+                              "Update",
+                              style: TextStyle(
+                                  color: colors,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                      )
+                    : Container(),
+              ),
+              Card(
+                child: ListTile(
+                  title: const Text('Log out'),
+                  onTap: () async {
+                    Get.offAll(AddUser());
+                    storg.remove("id");
+                  },
+                  leading: Icon(
+                    Icons.exit_to_app,
+                    color: colors,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -247,151 +345,154 @@ class _HomeState extends State<Home> {
                               children: [
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.07,
+                                      MediaQuery.of(context).size.height * 0.01,
                                 ),
                                 //  NAME
-                                StreamBuilder<QuerySnapshot>(
-                                  stream: users.snapshots(),
-                                  builder: (context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return const Text(
-                                        'No Data...',
-                                      );
-                                    } else {
-                                      final posts = snapshot.data?.docs;
+                                Stack(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.12,
+                                        ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: users.snapshots(),
+                                          builder: (context,
+                                              AsyncSnapshot<QuerySnapshot>
+                                                  snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return const Text(
+                                                'No Data...',
+                                              );
+                                            } else {
+                                              final posts = snapshot.data?.docs;
 
-                                      resultt = posts![0]["name"];
+                                              resultt = posts![0]["name"];
 
-                                      return Stack(
-                                        children: [
-                                          Text(
-                                            resultt.toString(),
-                                            style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.038,
-                                                color: colors,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Positioned(
-                                              right: 0,
-                                              bottom: 0,
-                                              child: IconButton(
-                                                  onPressed: () {
-                                                    Get.defaultDialog(
-                                                        confirm: TextButton(
-                                                            onPressed:
-                                                                () async {
-                                                              // coll1 users
-                                                              if (point ==
-                                                                  null) {
-                                                              } else {
-                                                                setState(() {
-                                                                  chngename =
-                                                                      true;
-                                                                });
-                                                                await FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        'users')
-                                                                    .doc(storg
-                                                                        .read(
-                                                                            "id"))
-                                                                    .collection(
-                                                                        storg.read(
-                                                                            "id"))
-                                                                    .doc(storg
-                                                                        .read(
-                                                                            "id"))
-                                                                    .update({
-                                                                  'name': point,
-                                                                });
+                                              return Text(
+                                                resultt.toString(),
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.053,
+                                                    color: colors,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: IconButton(
+                                            onPressed: () {
+                                              Get.defaultDialog(
+                                                  confirm: TextButton(
+                                                      onPressed: () async {
+                                                        // coll1 users
+                                                        if (point == null) {
+                                                        } else {
+                                                          setState(() {
+                                                            chngename = true;
+                                                          });
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'users')
+                                                              .doc(storg
+                                                                  .read("id"))
+                                                              .collection(storg
+                                                                  .read("id"))
+                                                              .doc(storg
+                                                                  .read("id"))
+                                                              .update({
+                                                            'name': point,
+                                                          });
 
-                                                                // coll1 All users
+                                                          // coll1 All users
 
-                                                                await FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        'Allusers')
-                                                                    .doc(storg
-                                                                        .read(
-                                                                            "id"))
-                                                                    .update({
-                                                                  'name': point,
-                                                                });
-                                                                setState(() {
-                                                                  chngename =
-                                                                      false;
-                                                                });
-                                                                Get.back();
-                                                              }
-                                                            },
-                                                            child: chngename ==
-                                                                    true
-                                                                ? CircularProgressIndicator(
-                                                                    color:
-                                                                        colors,
-                                                                  )
-                                                                : Text(
-                                                                    "Confirm",
-                                                                    style: TextStyle(
-                                                                        color:
-                                                                            colors),
-                                                                  )),
-                                                        title: 'Edit',
-                                                        content: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  right: 40,
-                                                                  left: 40,
-                                                                  top: 20),
-                                                          child: TextField(
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .text,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                borderRadius: BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            4)),
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'Allusers')
+                                                              .doc(storg
+                                                                  .read("id"))
+                                                              .update({
+                                                            'name': point,
+                                                          });
+                                                          setState(() {
+                                                            chngename = false;
+                                                          });
+                                                          Get.back();
+                                                        }
+                                                      },
+                                                      child: chngename == true
+                                                          ? CircularProgressIndicator(
+                                                              color: colors,
+                                                            )
+                                                          : Text(
+                                                              "Confirm",
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      colors),
+                                                            )),
+                                                  title: 'Edit',
+                                                  content: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 40,
+                                                            left: 40,
+                                                            top: 20),
+                                                    child: TextField(
+                                                      keyboardType:
+                                                          TextInputType.text,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          4)),
+                                                          borderSide:
+                                                              BorderSide(
+                                                                  width: 1,
+                                                                  color:
+                                                                      colors),
+                                                        ),
+                                                        border:
+                                                            OutlineInputBorder(
                                                                 borderSide:
                                                                     BorderSide(
-                                                                        width:
-                                                                            1,
-                                                                        color:
-                                                                            colors),
-                                                              ),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: colors,
-                                                                width: 5,
-                                                              )),
-                                                              hintText:
-                                                                  "Change your name",
-                                                            ),
-                                                            onChanged: (val) {
-                                                              setState(() {
-                                                                point = val;
-                                                              });
-                                                            },
-                                                          ),
-                                                        ));
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.edit,
-                                                  )))
-                                        ],
-                                      );
-                                    }
-                                  },
+                                                          color: colors,
+                                                          width: 5,
+                                                        )),
+                                                        hintText:
+                                                            "Change your name",
+                                                      ),
+                                                      onChanged: (val) {
+                                                        setState(() {
+                                                          point = val;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ));
+                                            },
+                                            icon: Icon(
+                                              Icons.edit,
+                                            ))),
+                                  ],
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width,
@@ -408,149 +509,149 @@ class _HomeState extends State<Home> {
                                 ),
 
                                 // Group
-                                StreamBuilder<QuerySnapshot>(
-                                  stream: users.snapshots(),
-                                  builder: (context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return const Text(
-                                        'No Data...',
-                                      );
-                                    } else {
-                                      final posts = snapshot.data?.docs;
+                                Stack(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.07,
+                                        ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: users.snapshots(),
+                                          builder: (context,
+                                              AsyncSnapshot<QuerySnapshot>
+                                                  snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return const Text(
+                                                'No Data...',
+                                              );
+                                            } else {
+                                              final posts = snapshot.data?.docs;
 
-                                      resultt = posts![0]["group"];
+                                              resultt = posts![0]["group"];
 
-                                      return Stack(
-                                        children: [
-                                          Text(
-                                            "Group : " + resultt.toString(),
-                                            style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.024,
-                                                color: colors,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Positioned(
-                                              child: IconButton(
-                                                  onPressed: () {
-                                                    Get.defaultDialog(
-                                                        confirm: TextButton(
-                                                            onPressed:
-                                                                () async {
-                                                              // coll1 users
-                                                              if (groupp ==
-                                                                  null) {
-                                                              } else {
-                                                                setState(() {
-                                                                  chngenamegroupp =
-                                                                      true;
-                                                                });
-                                                                await FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        'users')
-                                                                    .doc(storg
-                                                                        .read(
-                                                                            "id"))
-                                                                    .collection(
-                                                                        storg.read(
-                                                                            "id"))
-                                                                    .doc(storg
-                                                                        .read(
-                                                                            "id"))
-                                                                    .update({
-                                                                  'group':
-                                                                      groupp,
-                                                                });
+                                              return Text(
+                                                "Group : " + resultt.toString(),
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.024,
+                                                    color: colors,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Positioned(
+                                      right: 020,
+                                      top: 0,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            Get.defaultDialog(
+                                                confirm: TextButton(
+                                                    onPressed: () async {
+                                                      // coll1 users
+                                                      if (groupp == null) {
+                                                      } else {
+                                                        setState(() {
+                                                          chngenamegroupp =
+                                                              true;
+                                                        });
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection('users')
+                                                            .doc(storg
+                                                                .read("id"))
+                                                            .collection(storg
+                                                                .read("id"))
+                                                            .doc(storg
+                                                                .read("id"))
+                                                            .update({
+                                                          'group': groupp,
+                                                        });
 
-                                                                // coll1 All users
+                                                        // coll1 All users
 
-                                                                await FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        'Allusers')
-                                                                    .doc(storg
-                                                                        .read(
-                                                                            "id"))
-                                                                    .update({
-                                                                  'group':
-                                                                      groupp,
-                                                                });
-                                                                setState(() {
-                                                                  chngenamegroupp =
-                                                                      false;
-                                                                });
-                                                                Get.back();
-                                                              }
-                                                            },
-                                                            child: chngename ==
-                                                                    true
-                                                                ? CircularProgressIndicator(
-                                                                    color:
-                                                                        colors,
-                                                                  )
-                                                                : Text(
-                                                                    "Confirm",
-                                                                    style: TextStyle(
-                                                                        color:
-                                                                            colors),
-                                                                  )),
-                                                        title: 'Edit',
-                                                        content: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  right: 40,
-                                                                  left: 40,
-                                                                  top: 20),
-                                                          child: TextField(
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .text,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                borderRadius: BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            4)),
-                                                                borderSide:
-                                                                    BorderSide(
-                                                                        width:
-                                                                            1,
-                                                                        color:
-                                                                            colors),
-                                                              ),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: colors,
-                                                                width: 5,
-                                                              )),
-                                                              hintText:
-                                                                  "Change your group ",
-                                                            ),
-                                                            onChanged: (val) {
-                                                              setState(() {
-                                                                groupp = val;
-                                                              });
-                                                            },
-                                                          ),
-                                                        ));
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.edit,
-                                                    size: 20,
-                                                  )))
-                                        ],
-                                      );
-                                    }
-                                  },
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'Allusers')
+                                                            .doc(storg
+                                                                .read("id"))
+                                                            .update({
+                                                          'group': groupp,
+                                                        });
+                                                        setState(() {
+                                                          chngenamegroupp =
+                                                              false;
+                                                        });
+                                                        Get.back();
+                                                      }
+                                                    },
+                                                    child: chngename == true
+                                                        ? CircularProgressIndicator(
+                                                            color: colors,
+                                                          )
+                                                        : Text(
+                                                            "Confirm",
+                                                            style: TextStyle(
+                                                                color: colors),
+                                                          )),
+                                                title: 'Edit',
+                                                content: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 40,
+                                                          left: 40,
+                                                          top: 20),
+                                                  child: TextField(
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    decoration: InputDecoration(
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    4)),
+                                                        borderSide: BorderSide(
+                                                            width: 1,
+                                                            color: colors),
+                                                      ),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                        color: colors,
+                                                        width: 5,
+                                                      )),
+                                                      hintText:
+                                                          "Change your group ",
+                                                    ),
+                                                    onChanged: (val) {
+                                                      setState(() {
+                                                        groupp = val;
+                                                      });
+                                                    },
+                                                  ),
+                                                ));
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            size: 20,
+                                          )),
+                                    )
+                                  ],
                                 ),
 
                                 SizedBox(
@@ -651,9 +752,7 @@ class _HomeState extends State<Home> {
                             backgroundColor: Colors.white,
                             radius: 50,
                             child: chnavter == true
-                                ? CircularProgressIndicator(
-                                    color: colors,
-                                  )
+                                ? spinkit
                                 : Image.asset(resultt),
                           ),
                         ),
@@ -673,8 +772,8 @@ class _HomeState extends State<Home> {
                                           return true;
                                         },
                                         child: GridView.count(
-                                          crossAxisCount: 3,
-                                          children: List.generate(9, (index) {
+                                          crossAxisCount: 2,
+                                          children: List.generate(2, (index) {
                                             return Center(
                                               child: InkWell(
                                                 onTap: () async {
@@ -712,12 +811,22 @@ class _HomeState extends State<Home> {
                                                     Get.back();
                                                   });
                                                 },
-                                                child: CircleAvatar(
-                                                  radius: 30,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  backgroundImage: AssetImage(
-                                                      "images/avt$index.png"),
+                                                child: Column(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 30,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      backgroundImage: AssetImage(
+                                                          "images/avt$index.png"),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    index == 0
+                                                        ? Text("Male")
+                                                        : Text("Female")
+                                                  ],
                                                 ),
                                               ),
                                             );

@@ -147,8 +147,8 @@ class _AddUserState extends State<AddUser> {
                               return true;
                             },
                             child: GridView.count(
-                              crossAxisCount: 3,
-                              children: List.generate(9, (index) {
+                              crossAxisCount: 2,
+                              children: List.generate(2, (index) {
                                 return Center(
                                   child: InkWell(
                                     onTap: () {
@@ -159,11 +159,21 @@ class _AddUserState extends State<AddUser> {
                                         print(indextimage);
                                       });
                                     },
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.transparent,
-                                      backgroundImage:
-                                          AssetImage("images/avt$index.png"),
+                                    child: Column(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 30,
+                                          backgroundColor: Colors.transparent,
+                                          backgroundImage: AssetImage(
+                                              "images/avt$index.png"),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        index == 0
+                                            ? Text("Male")
+                                            : Text("Female")
+                                      ],
                                     ),
                                   ),
                                 );

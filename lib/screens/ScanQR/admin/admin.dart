@@ -26,6 +26,8 @@ class _AdminState extends State<Admin> {
   var point;
   var addpointleading = false;
   var deleltleading = false;
+  var chng = false;
+
   // ignore: prefer_typing_uninitialized_variables
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class _AdminState extends State<Admin> {
 
               return ListView.builder(
                 itemCount: posts?.length,
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (BuildContext context, int indexLIST) {
                   return Padding(
                       padding:
                           const EdgeInsets.only(left: 10, right: 10, top: 20),
@@ -91,10 +93,11 @@ class _AdminState extends State<Admin> {
                                                 });
                                                 await FirebaseFirestore.instance
                                                     .collection('users')
-                                                    .doc(posts![index]["id"])
+                                                    .doc(
+                                                        posts![indexLIST]["id"])
                                                     .collection(
-                                                        posts[index]["id"])
-                                                    .doc(posts[index]["id"])
+                                                        posts[indexLIST]["id"])
+                                                    .doc(posts[indexLIST]["id"])
                                                     .update({
                                                   'point': int.parse(point),
                                                 });
@@ -103,7 +106,7 @@ class _AdminState extends State<Admin> {
 
                                                 await FirebaseFirestore.instance
                                                     .collection('Allusers')
-                                                    .doc(posts[index]["id"])
+                                                    .doc(posts[indexLIST]["id"])
                                                     .update({
                                                   'point': int.parse(point),
                                                 });
@@ -140,7 +143,8 @@ class _AdminState extends State<Admin> {
                                                 color: colors,
                                                 width: 5,
                                               )),
-                                              hintText: posts![index]["point"]
+                                              hintText: posts![indexLIST]
+                                                      ["point"]
                                                   .toString(),
                                             ),
                                             onChanged: (val) {
@@ -155,7 +159,7 @@ class _AdminState extends State<Admin> {
                                     children: [
                                       Center(
                                         child: Text(
-                                          posts![index]["point"].toString(),
+                                          posts![indexLIST]["point"].toString(),
                                           style: TextStyle(
                                               color: colors,
                                               fontSize: MediaQuery.of(context)
@@ -178,16 +182,110 @@ class _AdminState extends State<Admin> {
                                   ),
                                 ),
                               ),
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 25,
-                                child: Image.asset(posts[index]["image"]),
+                              leading: Stack(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 25,
+                                    child: chng == true
+                                        ? spinkit
+                                        : Image.asset(
+                                            posts[indexLIST]["image"]),
+                                  ),
+                                  Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            Get.defaultDialog(
+                                              title: "Avatar",
+                                              content: Container(
+                                                height: 200,
+                                                child: NotificationListener<
+                                                    OverscrollIndicatorNotification>(
+                                                  onNotification: (overscroll) {
+                                                    overscroll
+                                                        .disallowIndicator();
+                                                    return true;
+                                                  },
+                                                  child: GridView.count(
+                                                    crossAxisCount: 3,
+                                                    children: List.generate(9,
+                                                        (indexx) {
+                                                      return Center(
+                                                        child: InkWell(
+                                                          onTap: () async {
+                                                            setState(() async {
+                                                              // coll1 users
+
+                                                              setState(() {
+                                                                chng = true;
+                                                              });
+                                                              await FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'users')
+                                                                  .doc(posts[indexLIST]
+                                                                          ["id"]
+                                                                      .toString())
+                                                                  .collection(posts[
+                                                                              indexLIST]
+                                                                          ["id"]
+                                                                      .toString())
+                                                                  .doc(posts[indexLIST]
+                                                                          ["id"]
+                                                                      .toString())
+                                                                  .update({
+                                                                'image':
+                                                                    "images/avt$indexx.png",
+                                                              });
+
+                                                              // coll1 All users
+
+                                                              await FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'Allusers')
+                                                                  .doc(posts[
+                                                                          indexLIST]
+                                                                      ["id"])
+                                                                  .update({
+                                                                'image':
+                                                                    "images/avt$indexx.png",
+                                                              });
+                                                              setState(() {
+                                                                chng = false;
+                                                              });
+                                                              Get.back();
+                                                            });
+                                                          },
+                                                          child: chng == true
+                                                              ? spinkit
+                                                              : CircleAvatar(
+                                                                  radius: 30,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  backgroundImage:
+                                                                      AssetImage(
+                                                                          "images/avt$indexx.png"),
+                                                                ),
+                                                        ),
+                                                      );
+                                                    }),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(Icons.edit)))
+                                ],
                               ),
-                              title: Text(posts[index]["name"]),
-                              subtitle: Text(posts[index]["id"]),
+                              title: Text(posts[indexLIST]["name"]),
+                              subtitle: Text(posts[indexLIST]["id"]),
                             ),
                           ),
-                          storg.read("id") == posts[index]["id"]
+                          storg.read("id") == posts[indexLIST]["id"]
                               ? Container()
                               : IconButton(
                                   onPressed: () async {
@@ -199,19 +297,19 @@ class _AdminState extends State<Admin> {
                                               });
                                               await FirebaseFirestore.instance
                                                   .collection('users')
-                                                  .doc(posts[index]["id"])
+                                                  .doc(posts[indexLIST]["id"])
                                                   .collection(
-                                                      posts[index]["id"])
-                                                  .doc(posts[index]["id"])
+                                                      posts[indexLIST]["id"])
+                                                  .doc(posts[indexLIST]["id"])
                                                   .delete();
                                               await FirebaseFirestore.instance
                                                   .collection('users')
-                                                  .doc(posts[index]["id"])
+                                                  .doc(posts[indexLIST]["id"])
                                                   .delete();
 
                                               await FirebaseFirestore.instance
                                                   .collection('Allusers')
-                                                  .doc(posts[index]["id"])
+                                                  .doc(posts[indexLIST]["id"])
                                                   .delete();
                                               setState(() {
                                                 deleltleading = false;
